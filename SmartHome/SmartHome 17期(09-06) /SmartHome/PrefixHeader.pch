@@ -1,0 +1,124 @@
+//
+//  PrefixHeader.pch
+//  SmartHome
+//
+//  Created by 龚伟 on 15/7/7.
+//  Copyright (c) 2015年 龚伟. All rights reserved.
+//
+
+#ifndef SmartHome_PrefixHeader_pch
+#define SmartHome_PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif
+#import "Singleton.h"
+#import "SHSocket.h"
+#import "MBProgressHUD+MJ.h"
+#import "Const.h"
+#import "Masonry.h"
+#import "GWTool.h"
+
+#define SOCKET_OFF  @"offSocket"
+#define SOCKET_ON  @"onSocket"
+
+
+//灯光
+typedef enum {
+    SHLightTypeTop= 0,//顶灯
+    SHLightTypeSideWall,//侧墙灯
+    SHLightTypeBar,//吧台灯
+    SHLightTypeReadL,//阅读灯L
+    SHLightTypeReadR,//阅读灯R
+    SHLightTypeStar,//星光灯
+    SHLightTypemxQCD//七彩灯
+} SHLightType;
+
+
+//触屏
+typedef enum {
+    SHTouchScreenTypeTVUp= 0,//电视开
+    SHTouchScreenTypeTVDown,//电视降
+    SHTouchScreenTypeGlassPulverization,//玻璃雾化
+    SHTouchScreenTypeGlassUp,//玻璃升
+    SHTouchScreenTypeGlassDown//玻璃降
+} SHTouchScreenType;
+
+
+//窗帘
+typedef enum {
+    SHCurtainTypeLeftFrontOpen = 0,//左前窗帘开
+    SHCurtainTypeLeftBackOpen,//左后窗帘开
+    SHCurtainTypeRightBackOpen,//右后窗帘开
+    SHCurtainTypeLeftFrontClose,//左前窗帘关
+    SHCurtainTypeLeftBackClose,//左后窗帘开
+    SHCurtainTypeRightBackClose //右后窗帘关
+} SHCurtainType;
+
+//电器
+typedef enum {
+    SHElectricTypeMovie= 0,//影音
+    SHElectricTypeAirClean,//空气净化
+    SHElectricTypeDeskOpen,//桌板伸出
+    SHElectricTypeDeskClose//桌板收回
+  
+} SHElectricType;
+
+
+//左右桌椅页面
+typedef enum {
+    /*左座椅*/
+    SHDeskTypeLeftUp = 0,//上
+    SHDeskTypeLeftDown,//下
+    SHDeskTypeLeftBeiLeft,//背部左边
+    SHDeskTypeLeftYaoLeft,//腰部左边
+    SHDeskTypeLeftTuiLeft,//腿部左边
+    SHDeskTypeLeftBeiRight,//背部右边
+    SHDeskTypeLeftYaoRight,//腰部右边
+    SHDeskTypeLeftTuiRight,//腿部右边
+    /*右座椅*/
+    SHDeskTypeRightUp,//上
+    SHDeskTypeRightDown,//下
+    SHDeskTypeRightBeiLeft,//背部左边
+    SHDeskTypeRightYaoLeft,//腰部左边
+    SHDeskTypeRightTuiLeft,//腿部左边
+    SHDeskTypeRightBeiRight,//背部右边
+    SHDeskTypeRightYaoRight,//腰部右边
+    SHDeskTypeRightTuiRight,//腿部右边
+    SHDeskTypeNextPage,//下一页
+    SHDeskTypeLeftWarm,//左加热
+    SHDeskTypeLeftMassage,//左按摩
+    SHDeskTypeRightWarm,//右加热
+    SHDeskTypeRightMassage//右按摩
+    
+} SHDeskType;
+
+
+//后座椅桌面
+typedef enum {
+    
+    SHBackDeskTypeHeat = 0,//加热
+    SHBackDeskTypeTripsis,//按摩
+    SHBackDeskTypeBack,//返回
+    SHBackDeskTypeLeftMidFront,//左中排前移
+    SHBackDeskTypeLeftMidBack,//左中排后移
+    SHBackDeskTypeRightMidFront,//右中排前移
+    SHBackDeskTypeRightMidBack,//右中排后移
+    SHBackDeskTypeUp,//上
+    SHBackDeskTypeDown,//下
+    SHBackDeskTypeBeiLeft,//背部左移
+    SHBackDeskTypeYaoLeft,//腰部左移
+    SHBackDeskTypeTuiLeft,//腿左移
+    SHBackDeskTypeBeiRight,//背部右移
+    SHBackDeskTypeYaoRight,//腰部右移
+    SHBackDeskTypeTuiRight//腿右移
+  
+    
+} SHBackDeskType;
+
+
+
+
+
+#define WS(weakSelf)  __weak __typeof(&*self)weakSelf = self;

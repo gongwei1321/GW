@@ -1,0 +1,87 @@
+//
+//  PrefixHeader.pch
+//  SmartHome
+//
+//  Created by 龚伟 on 15/7/7.
+//  Copyright (c) 2015年 龚伟. All rights reserved.
+//
+
+#ifndef SmartHome_PrefixHeader_pch
+#define SmartHome_PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif
+#import "Singleton.h"
+#import "SHSocket.h"
+#import "MBProgressHUD+MJ.h"
+#import "Const.h"
+#import "Masonry.h"
+#import "GWTool.h"
+
+#define SOCKET_OFF  @"offSocket"
+#define SOCKET_ON  @"onSocket"
+
+//灯光
+typedef enum {
+    SHLightTypeTop= 0,//顶灯
+    SHLightTypeAtmosphere,//氛围灯
+    SHLightTypeWall,//壁灯
+    SHLightTypeBar,//吧台灯
+    SHLightTypeRead//阅读灯
+} SHLightType;
+
+
+//电动/电器
+typedef enum {
+    SHElectricTypeMoviePower= 0,//影音总开关
+    SHElectricTypeAirVolumeAdd,//空调风量+
+    SHElectricTypeAirVolumeReduce,//空调风量-
+    SHElectricTypeVolumeAdd,//音量+
+    SHElectricTypeVolumeZero,//静音
+    SHElectricTypeVolumeReduce//音量-
+} SHElectricType;
+
+
+//桌椅页面
+typedef enum {
+    /*左座椅*/
+    SHDeskTypeLeftUp = 0,//上
+    SHDeskTypeLeftDown,//下
+    SHDeskTypeLeftBeiLeft,//背部左边
+    SHDeskTypeLeftYaoLeft,//腰部左边
+    SHDeskTypeLeftTuiLeft,//腿部左边
+    SHDeskTypeLeftBeiRight,//背部右边
+    SHDeskTypeLeftYaoRight,//腰部右边
+    SHDeskTypeLeftTuiRight,//腿部右边
+    /*右座椅*/
+    SHDeskTypeRightUp,//上
+    SHDeskTypeRightDown,//下
+    SHDeskTypeRightBeiLeft,//背部左边
+    SHDeskTypeRightYaoLeft,//腰部左边
+    SHDeskTypeRightTuiLeft,//腿部左边
+    SHDeskTypeRightBeiRight,//背部右边
+    SHDeskTypeRightYaoRight,//腰部右边
+    SHDeskTypeRightTuiRight//腿部右边
+} SHDeskType;
+
+
+//净化
+typedef enum {
+    SHScuttleTypeUp= 0,//天窗上
+    SHScuttleTypeOpen,//天窗开
+    SHScuttleTypeClose//天窗关
+  
+} SHScuttleType;
+
+
+
+
+
+
+
+
+
+
+#define WS(weakSelf)  __weak __typeof(&*self)weakSelf = self;
