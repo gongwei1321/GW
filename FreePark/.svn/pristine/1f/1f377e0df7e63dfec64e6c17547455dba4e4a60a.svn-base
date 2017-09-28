@@ -1,0 +1,66 @@
+//
+//  SHViewController.m
+//  FreePark
+//
+//  Created by 龚伟 on 16/5/19.
+//  Copyright © 2016年 zhangwx. All rights reserved.
+//
+
+#import "SHViewController.h"
+
+@interface SHViewController () <UIWebViewDelegate>
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
+
+@end
+
+@implementation SHViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    
+    NSURLCache * cache = [NSURLCache sharedURLCache];
+    [cache removeAllCachedResponses];
+    [cache setDiskCapacity:0];
+    [cache setMemoryCapacity:0];
+    
+    
+    
+    self.webView.scalesPageToFit = YES;
+    self.webView.delegate = self;
+    self.webView.scrollView.bounces = NO;
+    
+    self.title = @"帮助";
+    
+    [SVProgressHUD show];
+    
+    NSString *urlStr =[NSString stringWithFormat:@"%@api/app/getParkInfo/help.html",BaseUrl] ;
+    NSURL *url = [NSURL URLWithString:urlStr];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    // 3. 发送请求给服务器
+    [self.webView loadRequest:request];
+
+    
+
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    [SVProgressHUD dismiss];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBarHidden = YES;
+}
+
+@end

@@ -1,0 +1,33 @@
+//
+//  ParkDetailVC.h
+//  FreePark
+//
+//  Created by zhangwx on 15/12/14.
+//  Copyright © 2015年 zhangwx. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "ParkEntity.h"
+
+@interface ParkDetailVC : UIViewController
+
+@property (nonatomic, strong) ParkEntity *parkEntity;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
+
+@end
+
+@interface ParkDetailTextCell :UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *titleL;
+@property (weak, nonatomic) IBOutlet UILabel *contentL;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentBottom;
+@property (weak, nonatomic) IBOutlet UILabel *sharerID;
+@property (weak, nonatomic) IBOutlet UILabel *lastModityTime;
+
+@end
+
+@interface UIMenuController (Tag)
+
+@property (nonatomic) NSInteger tag;
+
+@end

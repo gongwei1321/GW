@@ -1,0 +1,627 @@
+//
+//  FindParkVC.m
+//  FreePark
+//
+//  Created by zhangwx on 15/12/12.
+//  Copyright © 2015年 zhangwx. All rights reserved.
+//
+
+#import "FindParkVC.h"
+#import "ParkDetailVC.h"
+#import "ParkSearchVC.h"
+#import "ShareViewController.h"
+#import "LoginViewController.h"
+#import "ParkPaopaoView.h"
+#import <BaiduMapAPI_Map/BMKMapComponent.h>
+#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
+#import <BaiduMapAPI_Location/BMKLocationService.h>
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKConnector/ShareSDKConnector.h>
+#import <ShareSDKUI/ShareSDKUI.h>
+#import <ShareSDKUI/ShareSDK+SSUI.h>
+#import <ShareSDKUI/SSUIShareActionSheetItem.h>
+#import "Share.h"
+#import "BNCoreServices.h"
+#import "BNLocation.h"
+#import "MBProgressHUD.h"
+#import "NSObject+Commen.h"
+#import "ParkRequests.h"
+#import "UserRequests.h"
+#import "ParkEntity.h"
+#import "NSString+StringSize.h"
+#import "ShareAlterViewNodelete.h"
+#import "SVProgressHUD.h"
+
+#define kBaseParkAnnoTag 54321
+
+@interface FindParkVC ()<BMKMapViewDelegate, BNNaviRoutePlanDelegate, BNNaviUIManagerDelegate, BMKLocationServiceDelegate, ParkSearchDelegate, UIAlertViewDelegate, ShareAlterViewNodeleteDelegate>
+{
+    NSInteger currentOpenIndex;
+    CLLocation *userCurrLocation;
+    BOOL notUpdateParkAnnos;
+    UIView *userArrowView;
+    
+    BMKAnnotationView *currAnimAnno;
+    CADisplayLink *animLink;
+    
+    CLLocationDirection arrowRotate;
+    CADisplayLink *arrowRotateLink;
+    
+    BOOL needPickParkForSearch;
+    BOOL isShowShareAlert;
+    NSInteger nearestSearchRetIndex;
+}
+
+@property (strong, nonatomic) NSMutableArray *dataSource;
+
+@property (weak, nonatomic) IBOutlet UILabel *searchTxtLabel;
+@property (weak, nonatomic) IBOutlet BMKMapView *mapView;
+@property (strong, nonatomic) BMKLocationService *locationService;
+@property (weak, nonatomic) IBOutlet UIView *parkDetailView;
+@property (weak, nonatomic) IBOutlet ParkDetailContentView *parkDetailContentView;
+@property (weak, nonatomic) MBProgressHUD *hud;
+@property (strong, nonatomic) BMKPointAnnotation *userAnno;
+
+@property (nonatomic,strong) ShareAlterViewNodelete *shareNotDeleteView;
+
+@property (nonatomic) BOOL hasShared;
+
+@property (weak, nonatomic) UIPanGestureRecognizer *noSharePan;
+@property (weak, nonatomic) UIPinchGestureRecognizer *noSharePinch;
+
+@end
+
+@implementation FindParkVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.mapView.zoomLevel = 16;
+    self.mapView.rotateEnabled = NO;
+    self.parkDetailContentView.layer.cornerRadius = 4;
+    
+    self.locationService = [[BMKLocationService alloc] init];
+    self.dataSource = [[NSMutableArray alloc] init];
+    
+    [self setupShareView];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    
+    [_mapView viewWillAppear];
+    _mapView.delegate = self;
+    self.locationService.delegate = self;
+    [self.locationService startUserLocationService];
+    
+    arrowRotateLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(refreshArrowRotate)];
+    [arrowRotateLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    
+    __weak FindParkVC *wself = self;
+    [UserRequests requestJudgeAlreadyShare:^(BOOL hasShared) {
+        wself.hasShared = hasShared;
+        wself.mapView.scrollEnabled = hasShared;
+        wself.mapView.zoomEnabled = hasShared;
+        wself.mapView.zoomEnabledWithTap = hasShared;
+        wself.mapView.overlookEnabled = hasShared;
+        wself.mapView.rotateEnabled = hasShared;
+        
+        if (!hasShared) {
+            UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:wself action:@selector(noShareAlert)];
+            [wself.mapView addGestureRecognizer:pan];
+            wself.noSharePan = pan;
+            
+            UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:wself action:@selector(noShareAlert)];
+            [wself.mapView addGestureRecognizer:pinch];
+            wself.noSharePinch = pinch;
+        }else{
+            if (wself.noSharePinch) {
+                [wself.mapView removeGestureRecognizer:wself.noSharePinch];
+            }
+            
+            if (wself.noSharePan) {
+                [wself.mapView removeGestureRecognizer:wself.noSharePan];
+            }
+        }
+        
+    }];
+}
+
+- (void)noShareAlert
+{
+    if (!self.hasShared) {
+        [self showShareAlert];
+    }
+}
+
+- (void)showShareAlert
+{
+    if (!isShowShareAlert) {
+        isShowShareAlert = YES;
+        [[[UIAlertView alloc] initWithTitle:@"分享后才能使用此功能" message:nil delegate:self cancelButtonTitle:@"暂不分享" otherButtonTitles:@"立即分享", nil] show];
+    }
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [arrowRotateLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    
+    [_mapView viewWillDisappear];
+    _mapView.delegate = nil; // 不用时，置nil
+    self.locationService.delegate = nil;
+    [self.locationService stopUserLocationService];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)actionBack:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)actionAdd:(id)sender
+{
+    if([DataManager getUserName].length != 0)
+    {
+        ShareViewController *shareVC = [[ShareViewController alloc] init];
+        [self.navigationController pushViewController:shareVC animated:YES];
+    }
+    else{
+        LoginViewController *loginVC = [[LoginViewController alloc] init];
+        [self.navigationController pushViewController:loginVC animated:YES];
+    }
+}
+
+- (IBAction)actionSearch:(id)sender
+{
+    if (!self.hasShared) {
+        [self showShareAlert];
+        return;
+    }
+    ParkSearchVC *parkSearchVC = [[ParkSearchVC alloc] initWithNibName:@"ParkSearchVC" bundle:nil];
+    parkSearchVC.delegate = self;
+    [self.navigationController pushViewController:parkSearchVC animated:YES];
+}
+
+- (IBAction)actionZoomIn:(id)sender
+{
+    if (!self.hasShared) {
+        [self showShareAlert];
+        return;
+    }
+    notUpdateParkAnnos = YES;
+    [self.mapView zoomIn];
+}
+
+- (IBAction)actionZoomOut:(id)sender
+{
+    if (!self.hasShared) {
+        [self showShareAlert];
+        return;
+    }
+    notUpdateParkAnnos = YES;
+    [self.mapView zoomOut];
+}
+
+- (IBAction)actionBackToCurrPlace:(id)sender
+{
+    [self.mapView setCenterCoordinate:userCurrLocation.coordinate animated:YES];
+}
+
+- (void)setupShareView
+{
+    //没有删除的view
+    ShareAlterViewNodelete *shareViewNodelete = [[NSBundle mainBundle] loadNibNamed:@"ShareAlterViewNodelete" owner:nil options:nil][0];
+    shareViewNodelete.delegate = self;
+    shareViewNodelete.supperVC = self;
+    //TODO影藏分享微信好友
+    shareViewNodelete.wxShareBWidth.constant = 0;
+    shareViewNodelete.frame = CGRectMake(0, self.navigationController.view.frame.size.height, self.navigationController.view.frame.size.width, 180);
+    [self.navigationController.view addSubview:shareViewNodelete];
+    self.shareNotDeleteView = shareViewNodelete;
+    
+}
+
+#pragma mark - shareViewNodelete代理
+- (void)chooseActionNodeleteAtIndex:(NSInteger)index
+{
+    [self.shareNotDeleteView hideView];
+}
+- (void)chooseShareNodeleteTypeAtIndex:(NSInteger)index{
+    [self shareToPlatform:index];
+}
+- (void)shareToPlatform:(NSInteger)index
+{
+    [self.shareNotDeleteView hideView];
+    SSDKPlatformType ssdkType;
+    if(index == 0)//新浪微博
+    {
+        ssdkType = SSDKPlatformTypeSinaWeibo;
+    }
+    else if(index == 1)//微信会话
+    {
+        ssdkType = SSDKPlatformSubTypeWechatSession;
+    }
+    else if(index == 2)//微信朋友圈
+    {
+        ssdkType = SSDKPlatformSubTypeWechatTimeline;
+    }
+    //    self.ssdkType = ssdkType;
+    NSString *shareTxt = @"众人拾柴火焰高，一起加入“0元停车”，每年节省3000元停车费。http://a.app.qq.com/o/simple.jsp?pkgname=com.water.park";
+    NSString *shareTitle = @"众人拾柴火焰高，一起加入“0元停车”，每年节省3000元停车费。";
+    
+    UIImage *shareImg = [UIImage imageNamed:@"shareIcon"];
+    [Share shareWithType:ssdkType content:shareTxt defaultContent:shareTxt image:shareImg title:shareTitle url:[NSString stringWithFormat:@"http://a.app.qq.com/o/simple.jsp?pkgname=com.water.park"] description:nil result:^{
+        self.hasShared = YES;
+        [self.mapView removeGestureRecognizer:self.noSharePinch];
+        [self.mapView removeGestureRecognizer:self.noSharePan];
+    }];
+    
+}
+
+#pragma mark AlertView
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    isShowShareAlert = NO;
+    if (buttonIndex == 0) {
+        
+    }else{
+        [self.shareNotDeleteView showView];
+    }
+}
+
+#pragma mark 定位代理
+
+- (void)didUpdateUserHeading:(BMKUserLocation *)userLocation
+{
+    userCurrLocation = userLocation.location;
+    [self.mapView updateLocationData:userLocation];
+    arrowRotate = userLocation.heading.trueHeading/180*M_PI;
+}
+
+- (void)refreshArrowRotate
+{
+    userArrowView.transform = CGAffineTransformMakeRotation(arrowRotate);
+}
+
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+{
+    if (!userCurrLocation) {
+        [self.mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
+        userCurrLocation = userLocation.location;
+        [self refreshParks];
+    }
+    userLocation.title = nil;
+    userCurrLocation = userLocation.location;
+    [self.mapView updateLocationData:userLocation];
+    
+    if (!self.userAnno) {
+        BMKPointAnnotation *userAnno = [[BMKPointAnnotation alloc] init];
+        userAnno.coordinate = userLocation.location.coordinate;
+        self.userAnno = userAnno;
+        [self.mapView addAnnotation:userAnno];
+    }
+    [self.mapView removeAnnotation:self.userAnno];
+    self.userAnno.coordinate = userLocation.location.coordinate;
+    [self.mapView addAnnotation:self.userAnno];
+}
+
+#pragma mark 停车场搜索回调
+
+- (void)parkSearchResult:(CLLocationCoordinate2D) result searchStr:(NSString *)searchStr
+{
+    self.searchTxtLabel.text = searchStr;
+    needPickParkForSearch = YES;
+    [self.mapView setCenterCoordinate:result animated:YES];
+}
+
+#pragma mark 停车场泡泡按钮事件
+
+- (void)actionTapParkPaopaoDetailButton:(UIButton *)sender
+{
+    self.parkDetailView.hidden = NO;
+    BMKActionPaopaoView *annoPaopao = (BMKActionPaopaoView *)sender.superview.superview.superview;
+    currentOpenIndex = annoPaopao.tag - kBaseParkAnnoTag;
+    ParkAnno *anno = self.dataSource[currentOpenIndex];
+    self.parkDetailContentView.titleLabel.text = anno.parkName;
+    self.parkDetailContentView.priceLabel.text = [NSString stringWithFormat:@"价格：%@",anno.parkStopprice];
+    CLLocationDistance distance = BMKMetersBetweenMapPoints(BMKMapPointForCoordinate(userCurrLocation.coordinate), BMKMapPointForCoordinate(anno.coordinate));
+    
+    self.parkDetailContentView.distanceLabel.text = [NSString stringWithFormat:@"距离：%.2fm", distance];
+    [self.parkDetailContentView showPDetailContentView];
+}
+
+#pragma mark 停车场导航按钮
+
+- (IBAction)actionTapParkNavButton:(UIButton *)sender
+{
+    ParkAnno *anno = self.dataSource[currentOpenIndex];
+    
+    NSMutableArray *nodesArray = [[NSMutableArray alloc]    initWithCapacity:2];
+    
+    //起点
+    BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
+    startNode.pos = [[BNPosition alloc] init];
+    startNode.pos.x = self.locationService.userLocation.location.coordinate.longitude;
+    startNode.pos.y = self.locationService.userLocation.location.coordinate.latitude;
+    startNode.pos.eType = BNCoordinate_BaiduMapSDK;
+    [nodesArray addObject:startNode];
+    
+    //终点
+    BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
+    endNode.pos = [[BNPosition alloc] init];
+    endNode.pos.x = anno.coordinate.longitude;
+    endNode.pos.y = anno.coordinate.latitude;
+    endNode.pos.eType = BNCoordinate_BaiduMapSDK;
+    [nodesArray addObject:endNode];
+    
+    self.hud = [self.navigationController.view showLoading:@"路径规划中"];
+    
+    //发起路径规划
+    [BNCoreServices_RoutePlan startNaviRoutePlan:BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self userInfo:nil];
+}
+
+//算路成功回调
+-(void)routePlanDidFinished:(NSDictionary *)userInfo
+{
+    [self.navigationController.view stopLoading:self.hud];
+    //路径规划成功，开始导航
+    [BNCoreServices_UI showNaviUI: BN_NaviTypeReal delegete:self isNeedLandscape:YES];
+}
+
+- (void)routePlanDidFailedWithError:(NSError *)error andUserInfo:(NSDictionary*)userInfo
+{
+    [self.navigationController.view stopLoading:self.hud];
+}
+
+-(void)routePlanDidUserCanceled:(NSDictionary*)userInfo
+{
+    [self.navigationController.view stopLoading:self.hud];
+}
+
+#pragma mark 停车场详情
+
+- (IBAction)actionGotoParkDetail:(id)sender
+{
+    ParkDetailVC *detailVC = [[ParkDetailVC alloc] initWithNibName:@"ParkDetailVC" bundle:nil];
+    ParkAnno *anno = self.dataSource[currentOpenIndex];
+    
+    ParkEntity *entity = [[ParkEntity alloc] init];
+    entity.mapLat = [NSString stringWithFormat:@"%lf", anno.coordinate.latitude];
+    entity.mapLng = [NSString stringWithFormat:@"%lf", anno.coordinate.longitude];
+    entity.parkName = anno.parkName;
+    entity.parkDescription = anno.parkDescription;
+    entity.parkStopprice = anno.parkStopprice;
+    entity.parPriceTime = anno.parPriceTime;
+    entity.parkId = anno.parkId;
+    detailVC.parkEntity = entity;
+    [self.navigationController pushViewController:detailVC animated:YES];
+}
+
+#pragma mark 百度地图代理
+
+- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
+{
+    if (annotation == self.userAnno) {
+        static NSString *userAnnoReuseID = @"userAnnoReuseID";
+        BMKAnnotationView *annoView = [mapView viewForAnnotation:annotation];
+        if (annoView == nil) {
+            annoView = [[BMKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:userAnnoReuseID];
+            UIImageView *v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"userPositionIcon"]];
+            v.frame = CGRectMake(0, 0, 36, 35);
+            v.tag = 1561;
+            [annoView addSubview:v];
+        }
+        annoView.image = [UIImage imageNamed:@"userPositionClearIcon"];
+        
+        userArrowView = [annoView viewWithTag:1561];
+        return annoView;
+    }
+    
+    
+    static NSString *annoReuseID = @"reuseID";
+    BMKAnnotationView *annoView = [mapView viewForAnnotation:annotation];
+    if (annoView == nil) {
+        annoView = [[BMKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annoReuseID];
+        ParkPaopaoView *customView = [ParkPaopaoView instanceFromNib];
+        [customView.detailButton addTarget:self action:@selector(actionTapParkPaopaoDetailButton:) forControlEvents:UIControlEventTouchUpInside];
+        annoView.paopaoView = [[BMKActionPaopaoView alloc] initWithCustomView:customView];
+        annoView.paopaoView.hidden = YES;
+        customView.userInteractionEnabled = YES;
+    }
+    
+    ParkAnno *anno = annotation;
+    annoView.tag = kBaseParkAnnoTag + anno.index;
+    annoView.userInteractionEnabled = YES;
+    
+    annoView.calloutOffset = CGPointMake(257/2+31/4, (56+31/2)/2);
+    
+    if ((anno.parkStopprice.length == 0 || [anno.parkStopprice hasPrefix:@"0元"])
+        && (anno.parPriceTime.length == 0 || [anno.parPriceTime hasPrefix:@"0元"])) {
+        annoView.image = [UIImage imageNamed:@"parkAnnoIconFree"];
+    }else{
+        annoView.image = [UIImage imageNamed:@"parkAnnoIcon"];
+    }
+    
+    return annoView;
+}
+
+- (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
+{
+    
+    view.image = [UIImage imageNamed:@"parkAnnoIcon_s"];
+//    ParkPaopaoView *paopaoView = view.paopaoView.subviews[0];
+    ParkAnno *anno = view.annotation;
+//    paopaoView.titleLabel.text = anno.parkName;
+//    
+//    CGFloat paopaoWidth = [anno.parkName stringSizeConstrainedToSize:CGSizeMake(1000, 20) WithFont:[UIFont systemFontOfSize:15]].width;
+//    CGRect rect = paopaoView.frame;
+//    rect.size.width = paopaoWidth + 50;
+//    paopaoView.frame = rect;
+//    paopaoView.priceLabel.text = anno.parkStopprice;
+//    
+    notUpdateParkAnnos = YES;
+//
+    if (self.mapView.region.span.latitudeDelta > 0.05 && self.hasShared) {
+        [self.mapView setRegion:BMKCoordinateRegionMake(CLLocationCoordinate2DMake(anno.coordinate.latitude, anno.coordinate.longitude), BMKCoordinateSpanMake(0.05, 0.05)) animated:YES];
+    }
+    
+    currAnimAnno = view;
+    if (animLink) {
+        [animLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    }
+    animLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(refreshZ)];
+    [animLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [animLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+        animLink = nil;
+    });
+    
+//    [paopaoView showAnimation:^{
+//        [animLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+//        animLink = nil;
+//    }];
+    
+    
+    self.parkDetailView.hidden = NO;
+//    BMKActionPaopaoView *annoPaopao = (BMKActionPaopaoView *)sender.superview.superview.superview;
+    currentOpenIndex = view.tag - kBaseParkAnnoTag;
+//    ParkAnno *anno = self.dataSource[currentOpenIndex];
+    self.parkDetailContentView.titleLabel.text = anno.parkName;
+    
+    if (anno.parkStopprice.length > 0)
+    {
+        self.parkDetailContentView.priceLabel.text = [NSString stringWithFormat:@"价格：%@",anno.parkStopprice];
+    }else if (anno.parPriceTime.length > 0){
+        self.parkDetailContentView.priceLabel.text = [NSString stringWithFormat:@"价格：%@",anno.parPriceTime];
+    }
+    
+    CLLocationDistance distance = BMKMetersBetweenMapPoints(BMKMapPointForCoordinate(userCurrLocation.coordinate), BMKMapPointForCoordinate(anno.coordinate));
+    
+    self.parkDetailContentView.distanceLabel.text = [NSString stringWithFormat:@"距离：%.2fm", distance];
+    [self.parkDetailContentView showPDetailContentView];
+    
+}
+
+- (void)refreshZ
+{
+//    [currAnimAnno.superview bringSubviewToFront:currAnimAnno.paopaoView];
+    [currAnimAnno.superview bringSubviewToFront:currAnimAnno];
+}
+
+- (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view
+{
+    if ((((ParkAnno *)view.annotation).parkStopprice.length == 0 || [((ParkAnno *)view.annotation).parkStopprice hasPrefix:@"0元"])
+        && (((ParkAnno *)view.annotation).parPriceTime.length == 0 || [((ParkAnno *)view.annotation).parPriceTime hasPrefix:@"0元"])) {
+        view.image = [UIImage imageNamed:@"parkAnnoIconFree"];
+    }else{
+        view.image = [UIImage imageNamed:@"parkAnnoIcon"];
+    }
+    
+    [self.parkDetailContentView hidePDetailContentView];
+}
+
+- (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.parkDetailView.hidden = YES;
+    });
+    [self.parkDetailContentView hidePDetailContentView];
+}
+
+- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    if (!notUpdateParkAnnos) {
+        [self refreshParks];
+    }else{
+        notUpdateParkAnnos = NO;
+    }
+}
+
+- (void)refreshParks
+{
+    [ParkRequests requestParksByPoint:self.mapView.centerCoordinate complete:^(BOOL issuccess, NSMutableArray *retArr) {
+        if (issuccess) {
+            [self.mapView removeAnnotations:self.dataSource];
+            [self.dataSource removeAllObjects];
+            
+            NSInteger i = 0;
+            CLLocationDistance minDis = 0;
+            nearestSearchRetIndex = 0;
+            
+            for (ParkEntity *entity in retArr) {
+                ParkAnno *anno = [[ParkAnno alloc] init];
+                anno.coordinate = CLLocationCoordinate2DMake([entity.mapLat doubleValue], [entity.mapLng doubleValue]);
+                
+                if (i == 0) {
+                    minDis = [self distanceFrom:(self.mapView.centerCoordinate) to:anno.coordinate];
+                }else{
+                    double dis = [self distanceFrom:(self.mapView.centerCoordinate) to:anno.coordinate];
+                    if (dis < minDis) {
+                        minDis = dis;
+                        nearestSearchRetIndex = i;
+                    }
+                }
+                
+                anno.parkName = entity.parkName;
+                anno.parkDescription = entity.parkDescription;
+                anno.parkStopprice = entity.parkStopprice;
+                anno.parPriceTime = entity.parPriceTime;
+                anno.parkId = entity.parkId;
+                anno.index = i;
+                [self.dataSource addObject:anno];
+                i++;
+            }
+            [self.mapView addAnnotations:self.dataSource];
+            
+            if (needPickParkForSearch) {
+                needPickParkForSearch = NO;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    notUpdateParkAnnos = YES;
+                    [self.mapView selectAnnotation:self.dataSource[nearestSearchRetIndex] animated:YES];
+                });
+            }
+        }
+    }];
+}
+
+- (double) distanceFrom:(CLLocationCoordinate2D) from to:(CLLocationCoordinate2D)to
+{
+    return sqrt((from.latitude-to.latitude)*(from.latitude-to.latitude) + (from.longitude-to.longitude)*(from.longitude-to.longitude));
+}
+
+@end
+
+@implementation ParkAnno
+
+@end
+
+@implementation ParkDetailContentView
+
+- (void)showPDetailContentView
+{
+    [self layoutIfNeeded];
+    [UIView animateWithDuration:.3 animations:^{
+        self.topConstrain.constant = 0;
+        [self layoutIfNeeded];
+    }];
+}
+
+- (void)hidePDetailContentView
+{
+    [self layoutIfNeeded];
+    [UIView animateWithDuration:.3 animations:^{
+        self.topConstrain.constant = 86;
+        [self layoutIfNeeded];
+    }];
+}
+
+@end

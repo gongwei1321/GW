@@ -1,0 +1,154 @@
+//
+//  WebUserLoginVC.m
+//  FreePark
+//
+//  Created by zhangwx on 16/5/8.
+//  Copyright © 2016年 zhangwx. All rights reserved.
+//
+
+#import "WebUserLoginVC.h"
+#import "WebUserLoginWithEmailVC.h"
+#import "WDTextField.h"
+#import "UserRequests.h"
+#import "PhoneNumBlindVC.h"
+#import "APService.h"
+#import "DataManager.h"
+
+@interface WebUserLoginVC () <UITextFieldDelegate>
+
+@property (weak, nonatomic) IBOutlet UITextField *usernameField;
+@property (weak, nonatomic) IBOutlet WDTextField *passwordField;
+@property (weak, nonatomic) IBOutlet UIButton *hidePassBtn;
+
+@end
+
+@implementation WebUserLoginVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.passwordField.type  = WDTextFieldPass;
+    self.passwordField.secureTextEntry = YES;
+    self.passwordField.delegate = self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [SVProgressHUD dismiss];
+}
+
+- (IBAction)passWordHideSwitch:(id)sender {
+    self.hidePassBtn.selected = !self.hidePassBtn.selected;
+    self.passwordField.secureTextEntry = !self.hidePassBtn.selected;
+    [self.passwordField becomeFirstResponder];
+}
+
+- (IBAction)actionLogin:(id)sender
+{
+    [self.usernameField resignFirstResponder];
+    [self.passwordField resignFirstResponder];
+    
+    if (self.usernameField.text.length == 0) {
+        [SVProgressHUD showErrorWithStatus:@"请输入用户名!"];
+        return;
+    }
+    if (self.passwordField.text.length == 0) {
+        [SVProgressHUD showErrorWithStatus:@"请输入密码!"];
+        return;
+    }
+    [SVProgressHUD show];
+    [UserRequests requestLoginByWebUserName:self.usernameField.text andUserPwd:self.passwordField.text cityIndex:self.cityIndex complete:^(BOOL issuccess, NSString *loginTag, NSString *loginUserName) {
+        if (issuccess) {
+            if ([loginTag isEqualToString:@"20010"]) {
+                PhoneNumBlindVC *phoneNumBindVC = [[PhoneNumBlindVC alloc] initWithNibName:@"PhoneNumBlindVC" bundle:nil];
+                
+                phoneNumBindVC.userName = self.usernameField.text;
+                
+                if ([DataManager latitude] > 0 || [DataManager longitude] > 0) {
+                    phoneNumBindVC.mapLat = [NSString stringWithFormat:@"%f", [DataManager latitude]];
+                    phoneNumBindVC.mapLng = [NSString stringWithFormat:@"%f", [DataManager longitude]];
+                }else{
+                    if ([self.cityIndex isEqualToString:@"0"]) {//北京web用户
+                        phoneNumBindVC.mapLat = @"116.382178";
+                        phoneNumBindVC.mapLng = @"39.913436";
+                    }else if ([self.cityIndex isEqualToString:@"1"]){//上海web用户
+                        phoneNumBindVC.mapLat = @"121.482321";
+                        phoneNumBindVC.mapLng = @"31.238281";
+                    }else if ([self.cityIndex isEqualToString:@"2"]){//广州web用户
+                        phoneNumBindVC.mapLat = @"113.272087";
+                        phoneNumBindVC.mapLng = @"23.132915";
+                    }else if ([self.cityIndex isEqualToString:@"3"]){//深圳web用户
+                        phoneNumBindVC.mapLat = @"114.067406";
+                        phoneNumBindVC.mapLng = @"22.547046";
+                    }
+                }
+                [self.navigationController pushViewController:phoneNumBindVC animated:YES];
+            }
+            else if([loginTag isEqualToString:@"20011"])
+            {
+                [SVProgressHUD showErrorWithStatus:@"用户名不存在!"];
+            }
+            else if([loginTag isEqualToString:@"20013"])
+            {
+                [SVProgressHUD showErrorWithStatus:@"密码错误!"];
+            }else{
+                
+                PhoneNumBlindVC *phoneNumBindVC = [[PhoneNumBlindVC alloc] initWithNibName:@"PhoneNumBlindVC" bundle:nil];
+                
+                phoneNumBindVC.userName = self.usernameField.text;
+                
+                if ([DataManager latitude] > 0 || [DataManager longitude] > 0) {
+                    phoneNumBindVC.mapLat = [NSString stringWithFormat:@"%f", [DataManager latitude]];
+                    phoneNumBindVC.mapLng = [NSString stringWithFormat:@"%f", [DataManager longitude]];
+                }else{
+                    if ([loginTag isEqualToString:@"20014"]) {//北京web用户
+                        phoneNumBindVC.mapLat = @"116.382178";
+                        phoneNumBindVC.mapLng = @"39.913436";
+                    }else if ([loginTag isEqualToString:@"20015"]){//上海web用户
+                        phoneNumBindVC.mapLat = @"121.482321";
+                        phoneNumBindVC.mapLng = @"31.238281";
+                    }else if ([loginTag isEqualToString:@"20016"]){//广州web用户
+                        phoneNumBindVC.mapLat = @"113.272087";
+                        phoneNumBindVC.mapLng = @"23.132915";
+                    }else if ([loginTag isEqualToString:@"20017"]){//深圳web用户
+                        phoneNumBindVC.mapLat = @"114.067406";
+                        phoneNumBindVC.mapLng = @"22.547046";
+                    }
+                }
+                [self.navigationController pushViewController:phoneNumBindVC animated:YES];
+            }
+            
+        }
+        else{
+            [SVProgressHUD showErrorWithStatus:@"登录失败"];
+        }
+    }];
+    
+}
+
+- (IBAction)actionUseMailLogin:(id)sender
+{
+    WebUserLoginWithEmailVC *vc = [[WebUserLoginWithEmailVC alloc] initWithNibName:@"WebUserLoginWithEmailVC" bundle:nil];
+    vc.cityIndex = self.cityIndex;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string {
+    
+    NSCharacterSet *cs;
+    cs = [[NSCharacterSet characterSetWithCharactersInString:kAlphaNum] invertedSet];
+    NSString *filtered =
+    [[string componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
+    BOOL basic = [string isEqualToString:filtered];
+    return basic;
+}
+
+@end

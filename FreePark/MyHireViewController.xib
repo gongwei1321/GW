@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyHireViewController">
+            <connections>
+                <outlet property="tableView" destination="5I8-wL-ZJ2" id="OrU-v3-2eM"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U3e-96-T9E">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="我的出租" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FRx-V6-khn">
+                            <rect key="frame" x="152.5" y="31" width="70" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.20784313730000001" green="0.23921568630000001" blue="0.39607843139999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="FRx-V6-khn" firstAttribute="centerX" secondItem="U3e-96-T9E" secondAttribute="centerX" id="PKR-NK-dSv"/>
+                        <constraint firstAttribute="height" constant="64" id="XO0-G6-bv3"/>
+                        <constraint firstAttribute="bottom" secondItem="FRx-V6-khn" secondAttribute="bottom" constant="12" id="kpI-yD-JmG"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XMW-Di-65t">
+                    <rect key="frame" x="0.0" y="64" width="375" height="8"/>
+                    <color key="backgroundColor" red="0.97254901959999995" green="0.97647058819999999" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="8" id="t9L-MS-knw"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5I8-wL-ZJ2">
+                    <rect key="frame" x="0.0" y="72" width="375" height="595"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="XMW-Di-65t" secondAttribute="trailing" id="9TP-9S-X13"/>
+                <constraint firstItem="U3e-96-T9E" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="9o5-VU-vp8"/>
+                <constraint firstAttribute="bottom" secondItem="5I8-wL-ZJ2" secondAttribute="bottom" id="LoM-BS-YuY"/>
+                <constraint firstItem="XMW-Di-65t" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ScL-0G-a43"/>
+                <constraint firstItem="5I8-wL-ZJ2" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Yd7-5y-0hQ"/>
+                <constraint firstAttribute="trailing" secondItem="5I8-wL-ZJ2" secondAttribute="trailing" id="eGJ-s2-2B8"/>
+                <constraint firstItem="XMW-Di-65t" firstAttribute="top" secondItem="U3e-96-T9E" secondAttribute="bottom" id="iSN-pF-oZz"/>
+                <constraint firstAttribute="trailing" secondItem="U3e-96-T9E" secondAttribute="trailing" id="meP-kY-sZq"/>
+                <constraint firstItem="U3e-96-T9E" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="xCW-7d-ifv"/>
+                <constraint firstItem="5I8-wL-ZJ2" firstAttribute="top" secondItem="XMW-Di-65t" secondAttribute="bottom" id="z2i-4g-TNf"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

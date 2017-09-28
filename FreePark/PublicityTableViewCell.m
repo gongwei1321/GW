@@ -1,0 +1,28 @@
+//
+//  PublicityTableViewCell.m
+//  FreePark
+//
+//  Created by 龚伟 on 15/12/27.
+//  Copyright © 2015年 zhangwx. All rights reserved.
+//
+
+#import "PublicityTableViewCell.h"
+
+@implementation PublicityTableViewCell
+
+- (void)awakeFromNib {
+    // Initialization code
+    self.backgroundColor = [UIColor clearColor];
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+- (void)setContentText:(NSString *)text
+{
+    
+}
+@end

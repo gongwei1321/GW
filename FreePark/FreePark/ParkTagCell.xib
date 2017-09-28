@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ParkTagCell" id="gTV-IL-0wX" customClass="ParkTagCell">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="25"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="50" height="25"/>
+                <subviews>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="地段好" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAB-XQ-zTb">
+                        <rect key="frame" x="0.0" y="0.0" width="50" height="25"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <animations/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <animations/>
+            <constraints>
+                <constraint firstItem="GAB-XQ-zTb" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="7TV-RO-Ro8"/>
+                <constraint firstItem="GAB-XQ-zTb" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="AA6-to-gUa"/>
+                <constraint firstAttribute="bottom" secondItem="GAB-XQ-zTb" secondAttribute="bottom" id="C68-on-U9x"/>
+                <constraint firstAttribute="trailing" secondItem="GAB-XQ-zTb" secondAttribute="trailing" id="ngS-4r-BNO"/>
+            </constraints>
+            <size key="customSize" width="74" height="31"/>
+            <connections>
+                <outlet property="tagTitle" destination="GAB-XQ-zTb" id="3Fd-4B-kBV"/>
+            </connections>
+            <point key="canvasLocation" x="257" y="273.5"/>
+        </collectionViewCell>
+    </objects>
+</document>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TagPickerView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="147"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rsC-lm-NsS">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="117"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="5W9-pQ-olf" customClass="UICollectionViewLeftAlignedLayout">
+                        <size key="itemSize" width="70" height="30"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="iN0-l3-epB" id="NCl-ed-ZLz"/>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="xii-N3-5P6"/>
+                    </connections>
+                </collectionView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fja-H7-RGu">
+                    <rect key="frame" x="94" y="117" width="133" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="fSb-B8-V4I"/>
+                        <constraint firstAttribute="width" constant="133" id="vxX-AA-qAQ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <state key="normal" title="  换一批" image="tagrefresh">
+                        <color key="titleColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="rsC-lm-NsS" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="LDD-db-vrD"/>
+                <constraint firstItem="rsC-lm-NsS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Mc4-Az-XLw"/>
+                <constraint firstAttribute="bottom" secondItem="rsC-lm-NsS" secondAttribute="bottom" constant="30" id="Omp-XY-fJa"/>
+                <constraint firstAttribute="bottom" secondItem="fja-H7-RGu" secondAttribute="bottom" id="ZMt-zL-wqK"/>
+                <constraint firstAttribute="trailing" secondItem="rsC-lm-NsS" secondAttribute="trailing" id="cEz-SP-FC0"/>
+                <constraint firstItem="fja-H7-RGu" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="iCg-KA-S1w"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="changeTags" destination="fja-H7-RGu" id="qQI-ot-ey8"/>
+                <outlet property="readySelectList" destination="rsC-lm-NsS" id="RQ5-W9-Lwe"/>
+            </connections>
+            <point key="canvasLocation" x="59" y="28.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="tagrefresh" width="14" height="13"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
+</document>

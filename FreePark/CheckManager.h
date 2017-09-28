@@ -1,0 +1,18 @@
+//
+//  CheckManager.h
+//  FreePark
+//
+//  Created by zhangwx on 16/4/16.
+//  Copyright © 2016年 zhangwx. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface CheckManager : NSObject
+
+@property (nonatomic) BOOL donotCheckShare;
+@property (nonatomic) BOOL checkShareForSearch;
+
++(instancetype)shareInstance;
+
+@end

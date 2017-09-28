@@ -1,0 +1,263 @@
+//
+//  WDHTTPTool.m
+//  Wanda
+//
+//  Created by 龚伟 on 15/7/19.
+//  Copyright (c) 2015年 龚伟. All rights reserved.
+//
+
+#import "WDHTTPTool.h"
+#import "NSString+URLEncoding.h"
+
+#import <SystemConfiguration/SystemConfiguration.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#define AFNETWORKING_ALLOW_INVALID_SSL_CERTIFICATES
+
+#define RequestTime     60*10
+
+@implementation WDHTTPTool
+singleton_implementation(WDHTTPTool)
+
++ (void)initHttps{
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy defaultPolicy];
+    securityPolicy.allowInvalidCertificates = YES;
+    [AFHTTPRequestOperationManager manager].securityPolicy = securityPolicy;
+}
+
++ (void)getHtmlWithURL:(NSString *)url params:(NSDictionary *)params success:(void (^)(id))success failure:(void (^)(NSError *))failure
+{
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    
+    mgr.requestSerializer.timeoutInterval = RequestTime;
+    mgr.requestSerializer = [AFHTTPRequestSerializer serializer];
+    mgr.responseSerializer = [AFHTTPResponseSerializer serializer];
+    mgr.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html", nil];
+    
+    NSString *paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
+    url = [url stringByAppendingString:[WDHTTPTool makeGetParamsString:[NSMutableDictionary dictionaryWithDictionary:@{@"params":paramStr}]]];
+    // 2.发送请求
+    [mgr POST:url parameters:nil success:^(AFHTTPRequestOperation *operation, NSURLResponse *response) {
+        if (success) {
+            success([operation.response URL]);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@",[error localizedDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+    
+}
++ (void)getWithURL:(NSString *)url params:(NSDictionary *)params success:(void (^)(id))success failure:(void (^)(NSError *))failure
+{
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    
+    mgr.requestSerializer.timeoutInterval = RequestTime;
+    mgr.requestSerializer = [AFJSONRequestSerializer serializer];
+    mgr.responseSerializer = [AFJSONResponseSerializer serializer];
+    mgr.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/javascript", nil];
+    // 2.发送请求
+    
+    [mgr GET:url parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSString *responseStr =  [[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
+//        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
+        NSDictionary *dic = responseObject;
+        if ([[dic objectForKey:@"status"] intValue] == 0) {//请求成功
+            
+            if (success) {
+                success(dic);
+            }
+            return ;
+        }
+        else{  //其他错误
+            if (failure) {
+                NSString *errorMsg = [WDHTTPTool errorMsg:dic];
+                NSError *error = [[NSError alloc] initWithDomain:@"" code:-1 userInfo:@{@"message":errorMsg}];
+                failure(error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
++ (void)getWithURL:(NSString *)url params:(NSDictionary *)params fileStream:(NSData *)fileStream success:(void (^)(id))success failure:(void (^)(NSError *))failure
+{
+    // 1.创建请求管理对象
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    
+    mgr.requestSerializer.timeoutInterval = RequestTime;
+    mgr.requestSerializer = [AFJSONRequestSerializer serializer];
+    mgr.responseSerializer = [AFJSONResponseSerializer serializer];
+    mgr.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/plain", nil];
+    
+    NSString *paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
+    url = [url stringByAppendingString:[WDHTTPTool makeGetParamsString:[NSMutableDictionary dictionaryWithDictionary:@{@"params":paramStr}]]];
+    // 2.发送请求
+    [mgr POST:url parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        if (fileStream) {
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+            NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent: @"IOS_UPLOAD_IMAGE.jpg"];
+            
+            [fileStream writeToFile:path atomically:YES];
+            NSURL *filePath = [NSURL fileURLWithPath:path];
+            [formData appendPartWithFileURL:filePath name:@"uploadFiles" error:nil];
+        }
+        
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          
+          NSDictionary *dic = responseObject;
+          if ([[dic objectForKey:@"errorcode"] intValue] == 0) {//请求成功
+              
+              if (success) {
+                  success(responseObject);
+              }
+              return ;
+          }
+          else{  //其他错误
+              if (failure) {
+                  NSString *errorMsg = [WDHTTPTool errorMsg:dic];
+                  NSError *error = [[NSError alloc] initWithDomain:@"" code:-1 userInfo:@{@"msg":errorMsg}];
+                  failure(error);
+              }
+          }
+      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          if (failure) {
+              failure(error);
+          }
+      }];
+}
++ (void)postWithURLResponseImage:(NSString *)url params:(NSDictionary *)params success:(void (^)(id))success failure:(void (^)(NSError *))failure
+{
+    // 1.创建请求管理对象
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    mgr.requestSerializer.timeoutInterval = RequestTime;
+    //    mgr.requestSerializer = [AFJSONRequestSerializer serializer];
+    //    mgr.responseSerializer = [AFJSONResponseSerializer serializer];
+//    mgr.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/plain", @"text/html", nil];
+    mgr.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    NSString *paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
+    
+    // 2.发送请求
+    [mgr POST:url parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          if (success) {
+              success(responseObject);
+          }
+      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          if (failure) {
+              failure(error);
+          }
+      }];
+
+}
++ (void)postWithURL:(NSString *)url params:(NSDictionary *)params success:(void (^)(id))success failure:(void (^)(NSError *))failure
+{
+    // 1.创建请求管理对象
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    mgr.requestSerializer.timeoutInterval = RequestTime;
+//    mgr.requestSerializer = [AFJSONRequestSerializer serializer];
+//    mgr.responseSerializer = [AFJSONResponseSerializer serializer];
+    mgr.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/plain", @"text/html", nil];
+    
+    NSString *paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
+    
+    // 2.发送请求
+    [mgr POST:url parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          if (success) {
+              success(responseObject);
+          }
+      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          if (failure) {
+              failure(error);
+          }
+      }];
+}
+
+// 上传图片函数
++(void)posImageWithUrl:(NSString *)url
+             andParams:(NSDictionary *)params
+                 Image:(UIImage *)image
+               success:(void (^)(NSDictionary *dic))success
+               failure:(void (^)(NSError *))failure
+{
+    
+    __block NSString *path = nil;
+    
+    AFHTTPRequestOperationManager *af=[AFHTTPRequestOperationManager manager];
+    af.requestSerializer.timeoutInterval=30;
+    af.requestSerializer = [AFJSONRequestSerializer serializer];
+    af.responseSerializer = [AFJSONResponseSerializer serializer];
+    af.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/plain", nil];
+    
+    NSString *paramStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
+    url = [url stringByAppendingString:[WDHTTPTool makeGetParamsString:[NSMutableDictionary dictionaryWithDictionary:@{@"params":paramStr}]]];
+    
+    [af POST:url parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        path = [[paths objectAtIndex:0] stringByAppendingPathComponent: @"IOS_UPLOAD_IMAGE.jpg"];
+        
+        [UIImageJPEGRepresentation(image, .3) writeToFile:path atomically:YES];
+        NSURL *filePath = [NSURL fileURLWithPath:path];
+        [formData appendPartWithFileURL:filePath name:@"uploadFiles" error:nil];
+        
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        
+        NSDictionary *dic = responseObject;
+        if ([[dic objectForKey:@"errorcode"] intValue] == 0) {//请求成功
+            
+            if (success) {
+                success(responseObject);
+            }
+            return ;
+        }else{  //其他错误
+            if (failure) {
+                NSString *errorMsg = [WDHTTPTool errorMsg:dic];
+                NSError *error = [[NSError alloc] initWithDomain:@"" code:-1 userInfo:@{@"msg":errorMsg}];
+                failure(error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+        failure(error);
+    }];
+}
+
++ (NSString *)errorMsg:(NSDictionary *)rsp
+{
+    return rsp[@"message"];
+}
+
++ (NSString *)makeGetParamsString:(NSMutableDictionary *)values
+{
+    NSArray *keys = [values allKeys];
+    NSMutableString *params = [[NSMutableString alloc] initWithString:@"&"];
+    for (id key in keys) {
+        id value = [values objectForKey:key];
+        if ([value isKindOfClass:[NSString class]]) {
+            [params appendFormat:@"%@=%@&",key,[[values objectForKey:key] URLEncodedString]];
+        }else if ([value isKindOfClass:[NSNumber class]]) {
+            [params appendFormat:@"%@=%@&",key,[[[values objectForKey:key] stringValue] URLEncodedString]];
+        }else if ([value isKindOfClass:[NSArray class]]) {
+            NSArray *arrayValue = [values objectForKey:key];
+            for (NSString *value in arrayValue) {
+                [params appendFormat:@"%@=%@&",key,[value URLEncodedString]];
+            }
+        }
+    }
+    if ([params length] == 1) {
+        return @"";
+    }else {
+        return [params substringToIndex:[params length]-1];
+    }
+}
+
+@end

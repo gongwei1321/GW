@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "54dbf6ca-3b2e-357a-daea-63d2f54e6a2f++1889",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "54dbf6ca-3b2e-357a-daea-63d2f54e6a2f++1889" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "54dbf6ca-3b2e-357a-daea-63d2f54e6a2f++1889" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "12F14F64-015F-478A-A370-F64672F56AFF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "54dbf6ca-3b2e-357a-daea-63d2f54e6a2f++1889" : "FreePark\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "FreePark",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "FreePark.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/vip.svnspot.com\/gongwei1321.GW_SW",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "54dbf6ca-3b2e-357a-daea-63d2f54e6a2f++1889"
+    }
+  ]
+}

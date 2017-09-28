@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HonorViewController">
+            <connections>
+                <outlet property="backView" destination="xtE-ap-3On" id="CHG-Sd-26k"/>
+                <outlet property="tableView" destination="Kcg-Pb-4qz" id="S0f-Wd-mhH"/>
+                <outlet property="tipLabel" destination="DF7-zz-spn" id="WX8-oF-Aob"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="成功分享一条停车信息（免费/低价，无附加消费需求，且有较强实用性），奖励10元话费！" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DF7-zz-spn">
+                    <rect key="frame" x="16" y="493" width="288" height="54"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xtE-ap-3On">
+                    <rect key="frame" x="16" y="70" width="288" height="403"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bangdan" translatesAutoresizingMaskIntoConstraints="NO" id="8GY-7d-e2z">
+                            <rect key="frame" x="8" y="16" width="272" height="46"/>
+                        </imageView>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kcg-Pb-4qz">
+                            <rect key="frame" x="16" y="78" width="256" height="309"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="8GY-7d-e2z" firstAttribute="centerX" secondItem="xtE-ap-3On" secondAttribute="centerX" id="35I-ra-qqn"/>
+                        <constraint firstItem="Kcg-Pb-4qz" firstAttribute="top" secondItem="8GY-7d-e2z" secondAttribute="bottom" constant="16" id="4qt-1U-zAE"/>
+                        <constraint firstAttribute="trailing" secondItem="8GY-7d-e2z" secondAttribute="trailing" constant="8" id="H7J-8B-bSn"/>
+                        <constraint firstAttribute="trailing" secondItem="Kcg-Pb-4qz" secondAttribute="trailing" constant="16" id="Vi7-9V-2L3"/>
+                        <constraint firstItem="8GY-7d-e2z" firstAttribute="leading" secondItem="xtE-ap-3On" secondAttribute="leading" constant="8" id="d22-bl-8J3"/>
+                        <constraint firstAttribute="bottom" secondItem="Kcg-Pb-4qz" secondAttribute="bottom" constant="16" id="d3I-IN-Zt3"/>
+                        <constraint firstItem="8GY-7d-e2z" firstAttribute="top" secondItem="xtE-ap-3On" secondAttribute="top" constant="16" id="ihr-Ma-Jau"/>
+                        <constraint firstItem="Kcg-Pb-4qz" firstAttribute="leading" secondItem="xtE-ap-3On" secondAttribute="leading" constant="16" id="naZ-Xz-hkb"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.34509803921568627" green="0.76470588235294112" blue="0.85490196078431369" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="DF7-zz-spn" firstAttribute="top" secondItem="xtE-ap-3On" secondAttribute="bottom" constant="20" id="AI5-R5-c8F"/>
+                <constraint firstAttribute="trailing" secondItem="DF7-zz-spn" secondAttribute="trailing" constant="16" id="QOV-qW-ZGc"/>
+                <constraint firstItem="xtE-ap-3On" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="Qmr-Uv-CRU"/>
+                <constraint firstAttribute="trailing" secondItem="xtE-ap-3On" secondAttribute="trailing" constant="16" id="TZS-d3-uk3"/>
+                <constraint firstAttribute="bottom" secondItem="DF7-zz-spn" secondAttribute="bottom" constant="21" id="Xbt-Tk-ree"/>
+                <constraint firstItem="DF7-zz-spn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="bc4-6j-qLs"/>
+                <constraint firstItem="xtE-ap-3On" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="70" id="kA6-Z7-Rgo"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <point key="canvasLocation" x="-58" y="309"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bangdan" width="237" height="46"/>
+    </resources>
+</document>

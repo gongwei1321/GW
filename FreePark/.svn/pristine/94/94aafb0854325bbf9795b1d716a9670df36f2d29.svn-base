@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="deR-ul-wba" customClass="ParkPaopaoView">
+            <rect key="frame" x="0.0" y="0.0" width="257" height="31"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iN0-l3-epB">
+                    <rect key="frame" x="0.0" y="0.0" width="257" height="31"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yEY-Qn-sT6">
+                            <rect key="frame" x="20" y="0.0" width="38" height="15"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="15" id="xO6-SM-nGY"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oK2-3R-iar">
+                            <rect key="frame" x="20" y="16" width="38" height="15"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dbv-bL-SUL">
+                            <rect key="frame" x="61" y="-1" width="26" height="34"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="33" id="3rH-zb-Rvl"/>
+                                <constraint firstAttribute="width" constant="26" id="Aq6-RP-8Mb"/>
+                            </constraints>
+                            <state key="normal" image="parkPaoPaoDetail"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="oK2-3R-iar" firstAttribute="height" secondItem="yEY-Qn-sT6" secondAttribute="height" id="DLC-wQ-0ac"/>
+                        <constraint firstItem="yEY-Qn-sT6" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="OMG-6m-ffM"/>
+                        <constraint firstItem="oK2-3R-iar" firstAttribute="leading" secondItem="yEY-Qn-sT6" secondAttribute="leading" id="bov-Tf-7Mc"/>
+                        <constraint firstItem="Dbv-bL-SUL" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="dgX-gu-RlF"/>
+                        <constraint firstItem="oK2-3R-iar" firstAttribute="width" secondItem="yEY-Qn-sT6" secondAttribute="width" id="lvb-zN-evh"/>
+                        <constraint firstAttribute="bottom" secondItem="oK2-3R-iar" secondAttribute="bottom" id="oqI-Id-uqb"/>
+                        <constraint firstItem="yEY-Qn-sT6" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="qpK-sb-n9w"/>
+                        <constraint firstItem="Dbv-bL-SUL" firstAttribute="leading" secondItem="oK2-3R-iar" secondAttribute="trailing" constant="3" id="syU-P1-zGg"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="iN0-l3-epB" firstAttribute="top" secondItem="deR-ul-wba" secondAttribute="top" id="HOh-5o-yPw"/>
+                <constraint firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="eZl-iC-BX3"/>
+                <constraint firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="ge8-Fb-Y7m"/>
+                <constraint firstItem="iN0-l3-epB" firstAttribute="leading" secondItem="deR-ul-wba" secondAttribute="leading" id="lhI-xF-GMl"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="BVC-xg-Ogp"/>
+                <outlet property="detailButton" destination="Dbv-bL-SUL" id="w8T-R9-Wzh"/>
+                <outlet property="priceLabel" destination="oK2-3R-iar" id="Fe5-Al-wqH"/>
+                <outlet property="titleLabel" destination="yEY-Qn-sT6" id="hB6-UZ-mHe"/>
+            </connections>
+            <point key="canvasLocation" x="230.5" y="220"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="parkPaoPaoDetail" width="17" height="17"/>
+    </resources>
+</document>

@@ -1,0 +1,187 @@
+//
+//  MeViewController.m
+//  FreePark
+//
+//  Created by 龚伟 on 16/4/24.
+//  Copyright © 2016年 zhangwx. All rights reserved.
+//
+
+#import "MeViewController.h"
+#import "MeTableViewCell.h"
+#import "MeZanOrPLViewController.h"
+#import "TuCaoViewController.h"
+#import "UserRequests.h"
+#import "FPUserReview.h"
+#import "FPUserAdd.h"
+@interface MeViewController ()<UITableViewDelegate,UITableViewDataSource>
+@property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong,nonatomic) MeTableViewCell *fenxiangcell;
+@property (strong,nonatomic) MeTableViewCell *dianpingcell;
+@property (strong,nonatomic) MeTableViewCell *zancell;
+
+@end
+
+@implementation MeViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.nickNameLabel.text = [DataManager getUserName];
+    
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    [DataManager setBeijingReviewCount:@"0"];
+    [DataManager setShanghaiReviewCount:@"0"];
+    [DataManager setGuangzhouReviewCount:@"0"];
+    [DataManager setShenzhenReviewCount:@"0"];
+    
+    [DataManager setBeijingUersAddCount:@"0"];
+    [DataManager setShanghaiUersAddCount:@"0"];
+    [DataManager setGuangzhouUersAddCount:@"0"];
+    [DataManager setShenzhenUersAddCount:@"0"];
+    
+    [FPUserAdd MR_truncateAll];
+    [FPUserReview MR_truncateAll];
+    
+    self.dianpingcell.rightIcon.hidden = YES;
+    self.fenxiangcell.rightIcon.hidden = YES;
+    self.dianpingcell.shuliangButton.hidden = YES;
+    self.fenxiangcell.shuliangButton.hidden = YES;
+    
+    
+    [UserRequests requestGetAllUserReview:[DataManager getUserName] andBeiJingMin:[DataManager beijingReviewCount]   andBeiJingMax: [NSString stringWithFormat:@"%d",[[DataManager beijingReviewCount] intValue] + 1000]
+                           andShangHaiMin:[DataManager shanghaiReviewCount] andShangHaiMax: [NSString stringWithFormat:@"%d",[[DataManager shanghaiReviewCount] intValue] + 1000] andGuangZhouMin:[DataManager guangzhouReviewCount] andGuangZhouMax:[NSString stringWithFormat:@"%d",[[DataManager guangzhouReviewCount] intValue] + 1000] andShenZhenMin:[DataManager shenzhenReviewCount] andShenZhenMax: [NSString stringWithFormat:@"%d",[[DataManager shenzhenReviewCount] intValue] + 1000] complete:^(BOOL issuccess, NSString *ret,BOOL isUpdate,NSMutableArray *array) {
+                               if([ret isEqualToString:@"110020"])
+                               {
+                                   //                                   if ([FPUserReview MR_findAll].count != 0) {
+                                   if (isUpdate == FALSE)
+                                   {
+                                       self.dianpingcell.shuliangButton.hidden = NO;
+                                       NSString *sum;
+                                       if (array.count> 99)
+                                       {
+                                           sum = @"99+";
+                                       }
+                                       else{
+                                           sum = [NSString stringWithFormat:@"%lu",(unsigned long)[FPUserReview MR_findAll].count];
+                                       }
+                                     [self.dianpingcell.shuliangButton setTitle:sum forState:UIControlStateNormal];
+                                   }
+                                   else{
+                                       self.dianpingcell.rightIcon.hidden = NO;
+                                   }
+                                   
+                                   //                                   }
+                                   
+                               }
+                               
+                           }];
+    
+    
+    [UserRequests requestGetAllUserAdd:[DataManager getUserName] andBeiJingMin:[DataManager beijingUersAddCount]   andBeiJingMax: [NSString stringWithFormat:@"%d",[[DataManager beijingUersAddCount] intValue] + 1000]
+                        andShangHaiMin:[DataManager shanghaiUersAddCount] andShangHaiMax: [NSString stringWithFormat:@"%d",[[DataManager shanghaiUersAddCount] intValue] + 1000] andGuangZhouMin:[DataManager guangzhouUersAddCount] andGuangZhouMax:[NSString stringWithFormat:@"%d",[[DataManager guangzhouUersAddCount] intValue] + 1000] andShenZhenMin:[DataManager shenzhenUersAddCount] andShenZhenMax: [NSString stringWithFormat:@"%d",[[DataManager shenzhenUersAddCount] intValue] + 1000] complete:^(BOOL issuccess, NSString *ret,BOOL isUpdate,NSMutableArray *array) {
+                            if([ret isEqualToString:@"100020"])
+                            {
+                                //                                if ([FPUserAdd MR_findAll].count != 0) {
+                                //                                    self.fenxiangcell.shuliangButton.hidden = NO;
+                                //                                    [self.fenxiangcell.shuliangButton setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)[FPUserAdd MR_findAll].count] forState:UIControlStateNormal];
+                                //                                }
+                                if (isUpdate == FALSE) {
+                                    self.fenxiangcell.shuliangButton.hidden = NO;
+                                    NSString *sum;
+                                    if (array.count> 99)
+                                    {
+                                        sum = @"99+";
+                                    }
+                                    else{
+                                        sum = [NSString stringWithFormat:@"%lu",(unsigned long)[FPUserAdd MR_findAll].count];
+                                    }
+                                    
+                                    [self.fenxiangcell.shuliangButton setTitle:sum forState:UIControlStateNormal];
+                                }
+                                else{
+                                    self.fenxiangcell.rightIcon.hidden = NO;
+                                    
+                                }
+                            }
+                            
+                        }];
+    
+    [self.tableView reloadData];
+    
+
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 4;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString *cellID = @"MeTableViewCell";
+    MeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[NSBundle mainBundle] loadNibNamed:@"MeTableViewCell" owner:nil options:nil][0];
+    }
+    if (indexPath.row == 0) {
+        self.fenxiangcell = cell;
+    }
+    if (indexPath.row == 1) {
+        cell.cellImageView.image = [UIImage imageNamed:@"dianping"];
+        cell.titleLabel.text = @"我点评的";
+        self.dianpingcell = cell;
+    }
+    if (indexPath.row == 2) {
+        cell.cellImageView.image = [UIImage imageNamed:@"zan"];
+        cell.titleLabel.text = @"点个赞";
+        self.zancell = cell;
+        if ([DataManager enterAppTimes]>4 && ![DataManager getEnterAppStore]) {
+            self.zancell.rightIcon.hidden = NO;
+        }
+
+    }
+    if (indexPath.row == 3) {
+        cell.cellImageView.image = [UIImage imageNamed:@"tucao"];
+        cell.titleLabel.text = @"吐个槽";
+    }
+    return cell;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
+    return 60;
+}
+
+#pragma mark -tableview delegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (indexPath.row == 0 || indexPath.row == 1)//我点赞  我评论
+    {
+        MeZanOrPLViewController *zanOrPLVC = [[MeZanOrPLViewController alloc] initWithNibName:@"MeZanOrPLViewController" bundle:nil];
+        zanOrPLVC.requestType = (int)indexPath.row;
+        [self.navigationController pushViewController:zanOrPLVC animated:YES];
+    }
+    else if(indexPath.row == 2)//点赞
+    {
+        [DataManager setEnterAppStore:YES];
+       
+        self.zancell.rightIcon.hidden = YES;
+       
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://itunes.apple.com/mo/app/0yuan-ting-che/id1078076468?mt=8"]];
+    }
+    else if(indexPath.row == 3)//吐槽
+    {
+        TuCaoViewController *tuCaoVC = [[TuCaoViewController alloc] initWithNibName:@"TuCaoViewController" bundle:nil];
+        [self.navigationController pushViewController:tuCaoVC animated:YES];
+    }
+}
+
+
+@end

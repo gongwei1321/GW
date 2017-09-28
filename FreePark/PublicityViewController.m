@@ -1,0 +1,222 @@
+//
+//  PublicityViewController.m
+//  FreePark
+//
+//  Created by 龚伟 on 15/12/26.
+//  Copyright © 2015年 zhangwx. All rights reserved.
+//
+
+#import "PublicityViewController.h"
+#import "UserRequests.h"
+#import "PublicityTableViewCell.h"
+#import "ZZPublicity.h"
+#import "MJRefresh.h"
+#import "FPPublicity.h"
+#import "ParkDetailVC.h"
+#define kCountPerPage 20
+@interface PublicityViewController () <UITableViewDataSource,UITableViewDelegate>
+{
+    int currPage;
+    int beginIndex;
+}
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *gongshiLeadContraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *gongshiTopContraint;
+@property (weak, nonatomic) IBOutlet UIView *backView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic,strong) NSMutableArray *publicityArray;//公示信息数组
+
+@end
+
+@implementation PublicityViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+  
+    self.backView.layer.cornerRadius = 10.0f;
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    self.backView.userInteractionEnabled  = YES;
+    currPage = 0;
+    beginIndex = 0;
+    
+    self.publicityArray = [NSMutableArray array];
+    
+    NSString *phoneModel = [NSString stringWithFormat:@"%@",[ZZTool getCurrentDeviceModel:self]];
+    if ([phoneModel rangeOfString:@"iPhone 6 Plus"].location !=NSNotFound)
+    {
+        self.gongshiLeadContraint.constant = -15;
+        self.gongshiTopContraint.constant =  -16;
+    }
+    else if ([phoneModel rangeOfString:@"iPhone 6"].location !=NSNotFound)
+    {
+        self.gongshiLeadContraint.constant = -14;
+        self.gongshiTopContraint.constant =  -14;
+
+    }
+    
+//    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"网友添加的停车信息,在通过审核之前,放到此公示区公示7天,如果没有异议,则将审核通过"]];
+//    [str addAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} range:NSMakeRange(24, 18)];
+//    self.titleLabel.attributedText = str;
+    
+    [self loadMorePublicity];
+    self.tableView.footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^(){
+        [self loadMorePublicity];
+    }];
+    
+
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+- (void)loadMorePublicity
+{
+    [SVProgressHUD show];
+    [UserRequests requestGetPublicityByBeginValue:[NSString stringWithFormat:@"%d",0] andEndValue:[NSString stringWithFormat:@"%d",beginIndex+20] lat:[NSString stringWithFormat:@"%.8f",[DataManager latitude]] lng:[NSString stringWithFormat:@"%.8f",[DataManager longitude]] complete:^(BOOL issuccess, NSString *ret, NSArray *resultlist) {
+        if(issuccess)
+        {
+            [SVProgressHUD dismiss];
+            if (resultlist.count < 20) {
+                self.tableView.footer.hidden = YES;
+            }
+            [self.publicityArray removeAllObjects];
+            for (int i = 0; i<resultlist.count ; i++) {
+                [self.publicityArray addObject:resultlist[i]];
+            }
+            [self.tableView reloadData];
+            
+//            if (currentRow != 0) {
+//                [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:currentRow - 1 inSection:0]
+//                                            animated:YES
+//                                      scrollPosition:UITableViewScrollPositionBottom];
+//            }
+           
+            [self.tableView.footer endRefreshing];
+            beginIndex += 20;
+
+        }
+        else{
+            [self.tableView.footer endRefreshing];
+            NSArray *arraypubicity = [FPPublicity MR_findAll];
+            for (FPPublicity *publicity in arraypubicity) {
+                PublicityModel *model = [[PublicityModel alloc] init];
+                model.date = publicity.date;
+                model.name = publicity.name;
+                model.creator = publicity.creator;
+                model.sid = publicity.sid;
+                model.price = publicity.price;
+                
+                [self.publicityArray addObject:model];
+            }
+            self.tableView.footer.hidden = YES;
+            if (arraypubicity.count == 0) {
+                [SVProgressHUD showErrorWithStatus:@"获取公示信息失败!"];
+            }
+            else{
+                [SVProgressHUD dismiss];
+                [self.tableView reloadData];
+            }
+            
+            
+        }
+    }];
+
+}
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.publicityArray.count;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString *cellID = @"AnnouncementCell";
+    PublicityTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[NSBundle mainBundle] loadNibNamed:@"PublicityTableViewCell" owner:nil options:nil][0];
+    }
+    PublicityModel *model = (PublicityModel *)self.publicityArray[indexPath.row];
+//    @property (weak, nonatomic) IBOutlet UIImageView *parkImageView;
+//    @property (weak, nonatomic) IBOutlet UILabel *parkPlaceLabel;
+//    @property (weak, nonatomic) IBOutlet UILabel *parkPriceLabel;
+//    @property (weak, nonatomic) IBOutlet UILabel *parkWhoLabel;
+//    @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+    cell.parkPlaceLabel.text = model.name;
+    cell.parkPriceLabel.text = model.price;
+    cell.parkWhoLabel.text = [NSString stringWithFormat:@"车主%@提供",model.creator];
+    cell.timeLabel.text = model.date;
+    NSRange range = [model.price rangeOfString:@"0元"];
+    if(range.location!=NSNotFound)
+        [cell.parkImageView setImage:[UIImage imageNamed:@"公示区--免费"]];
+    else
+        [cell.parkImageView setImage:[UIImage imageNamed:@"公示区--收费"]];
+    
+    return cell;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+     return 99;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [SVProgressHUD dismiss];
+}
+#pragma mark -tableview delegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ParkDetailVC *detailVC = [[ParkDetailVC alloc] initWithNibName:@"ParkDetailVC" bundle:nil];
+    
+    PublicityModel *model = (PublicityModel *)self.publicityArray[indexPath.row];
+    [UserRequests requestGetParkDetailAndPositionById:model.sid andCityIndex:[DataManager cityIndex] complete:^(BOOL issuccess, NSString *name, NSString *description, NSString *stopPrice, NSString *priceTime, NSString *sid,NSString *lastModifyTime,NSString *creator,NSNumber *hasCollected,NSString *lat,NSString *lng) {
+        if (issuccess) {
+            ParkEntity *entity = [[ParkEntity alloc] init];
+            entity.mapLat = lat;
+            entity.mapLng = lng;
+            entity.parkName = name;
+            entity.parkDescription = description;
+            if(![stopPrice isEqualToString:@""])
+            {
+                entity.parkStopprice = stopPrice;
+                if (![stopPrice containsString:@"/"]) {
+                    entity.parkStopprice = [NSString stringWithFormat:@"%@元/小时",stopPrice];
+                }
+            }
+            else{
+                entity.parkStopprice = priceTime;
+                if (![priceTime containsString:@"/"]) {
+                    entity.parkStopprice = [NSString stringWithFormat:@"%@元/次",priceTime];
+                }
+            }
+//            entity.parkStopprice = stopPrice;
+            entity.parPriceTime = priceTime;
+            entity.parkId = sid;
+            entity.cityIndex = [DataManager cityIndex];
+            entity.hasCollected = hasCollected;
+            detailVC.parkEntity = entity;
+//            detailVC.backConstraint.constant = 1000;
+           [self.navigationController pushViewController:detailVC animated:YES];
+            
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                detailVC.backButton.hidden = YES;
+//            });
+        }
+        else{
+             [SVProgressHUD showErrorWithStatus:@"获取停车场详情失败!"];
+        }
+    }];
+
+}
+
+
+
+@end

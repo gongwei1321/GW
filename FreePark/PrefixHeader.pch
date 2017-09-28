@@ -1,0 +1,42 @@
+//
+//  PrefixHeader.pch
+//  FreePark
+//
+//  Created by 龚伟 on 15/12/23.
+//  Copyright © 2015年 zhangwx. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* PrefixHeader_pch */
+// 设置RGB颜色
+#define ZZColor(r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1.0]
+
+#import "SVProgressHUD.h"
+#import "UIBarButtonItem+MJ.h"
+#import "DataManager.h"
+#import "ZZTool.h"
+#import "Utils.h"
+#import "MagicalRecord.h"
+
+#define DESKey @"38FF8712DAC1ECC0917102E5E4039647"
+//#define BaseUrl @"http://www.122park.com/"
+//#define BaseUrl @"http://120.26.120.245/"
+//#define BaseUrl @"http://www.gybyy.com/"
+//#define BaseUrl @"https://www.couponslife.org/"
+
+
+//定义宏（限制输入内容）
+#define kAlphaNum  @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+//#define kAlpha      @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+//#define kNumbers     @"0123456789"
+#define kNumbersPeriod  @"0123456789."
+
+#define kBaiduMapKey @"GAVo7QiAhVPArwOGj7WBGhIU"
+
+#define UIColorFromHexWithAlpha(hexValue,a) [UIColor colorWithRed:((float)((hexValue & 0xFF0000) >> 16))/255.0 green:((float)((hexValue & 0xFF00) >> 8))/255.0 blue:((float)(hexValue & 0xFF))/255.0 alpha:a]
+#define UIColorFromHex(hexValue)            UIColorFromHexWithAlpha(hexValue,1.0)

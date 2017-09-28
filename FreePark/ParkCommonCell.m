@@ -1,0 +1,39 @@
+//
+//  ParkCommonCell.m
+//  FreePark
+//
+//  Created by zhangwx on 15/12/30.
+//  Copyright © 2015年 zhangwx. All rights reserved.
+//
+
+#import "ParkCommonCell.h"
+
+@interface ParkCommonCell ()
+
+@end
+
+@implementation ParkCommonCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+    self.openButton.layer.borderColor = UIColorFromHex(0x58C3DA).CGColor;
+    self.openButton.layer.borderWidth = 1;
+    self.openButton.layer.cornerRadius = 15;
+    
+    self.editBtn.layer.borderColor = UIColorFromHex(0x58C3DA).CGColor;
+    self.editBtn.layer.borderWidth = 1;
+    self.editBtn.layer.cornerRadius = 15;
+    
+    self.deleteBtn.layer.borderColor = UIColorFromHex(0x58C3DA).CGColor;
+    self.deleteBtn.layer.borderWidth = 1;
+    self.deleteBtn.layer.cornerRadius = 15;
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

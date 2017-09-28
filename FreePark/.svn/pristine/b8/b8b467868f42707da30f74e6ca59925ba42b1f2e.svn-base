@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15F34" minimumToolsVersion="Automatic">
+    <entity name="FPHonor" representedClassName="FPHonor">
+        <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo/>
+    </entity>
+    <entity name="FPPublicity" representedClassName="FPPublicity" syncable="YES">
+        <attribute name="creator" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="price" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sid" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FPUserAdd" representedClassName="FPUserAdd" syncable="YES">
+        <attribute name="cityIndex" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isUpdate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parkName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="posttime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reviewTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sid" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FPUserReview" representedClassName="FPUserReview" syncable="YES">
+        <attribute name="cityIndex" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isUpdate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parkName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="posttime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reviewTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sid" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="FPHonor" positionX="261" positionY="189" width="128" height="60"/>
+        <element name="FPPublicity" positionX="261" positionY="198" width="128" height="120"/>
+        <element name="FPUserAdd" positionX="288" positionY="252" width="128" height="135"/>
+        <element name="FPUserReview" positionX="270" positionY="243" width="128" height="135"/>
+    </elements>
+</model>
