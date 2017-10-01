@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ParkHireDetailViewController">
             <connections>
+                <outlet property="distanceLabel" destination="4wq-MD-9f8" id="3OX-EK-umU"/>
                 <outlet property="hireLabel" destination="AZg-pS-qWM" id="HyC-P7-q6S"/>
                 <outlet property="hireTypeLabel" destination="h5C-WV-9K1" id="UBV-uR-AQE"/>
                 <outlet property="lineView" destination="one-ug-TBE" id="ufv-Nz-LSq"/>
@@ -98,8 +99,8 @@
                     <color key="textColor" red="0.47058823529411764" green="0.49411764705882355" blue="0.62745098039215685" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1.2公里" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4wq-MD-9f8">
-                    <rect key="frame" x="296" y="332" width="47" height="17"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0公里" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4wq-MD-9f8">
+                    <rect key="frame" x="305" y="332" width="38" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" red="0.47058823529999999" green="0.4941176471" blue="0.62745098040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>

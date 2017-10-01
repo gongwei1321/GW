@@ -16,7 +16,14 @@
 #import <BaiduMapAPI_Location/BMKLocationService.h>
 #import <BaiduMapAPI_Map/BMKPointAnnotation.h>
 #import "ContactViewController.h"
-@interface ParkHireDetailViewController ()<UIAlertViewDelegate,BMKLocationServiceDelegate>
+#import <CoreLocation/CoreLocation.h>      //添加定位服务头文件（不可缺少）
+@interface ParkHireDetailViewController ()<UIAlertViewDelegate,CLLocationManagerDelegate>
+{
+    CLLocationManager *_locationManager;//定位服务管理类
+    CLGeocoder * _geocoder;//初始化地理编码器
+    CLLocationDegrees _latitude;
+    CLLocationDegrees _longitude;
+}
 @property (weak, nonatomic) IBOutlet UILabel *hireLabel;
 @property (weak, nonatomic) IBOutlet UILabel *titleLable;
 @property (weak, nonatomic) IBOutlet BMKMapView *mapView;
@@ -28,26 +35,42 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet UILabel *rentTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rentMoneyLabel;
-@property (strong, nonatomic)  BMKLocationService *locService;  //定位
 @end
 
 @implementation ParkHireDetailViewController
--(void)startLocation
+- (void)initializeLocationService {
+    _latitude = 0;
+    _longitude = 0;
+    // 初始化定位管理器
+    _locationManager = [[CLLocationManager alloc] init];
+    [_locationManager requestWhenInUseAuthorization];
+    //[_locationManager requestAlwaysAuthorization];//iOS8必须，这两行必须有一行执行，否则无法获取位置信息，和定位
+    // 设置代理
+    _locationManager.delegate = self;
+    // 设置定位精确度到米
+    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    // 设置过滤器为无
+    _locationManager.distanceFilter = kCLDistanceFilterNone;
+    // 开始定位
+    [_locationManager startUpdatingLocation];//开始定位之后会不断的执行代理方法更新位置会比较费电所以建议获取完位置即时关闭更新位置服务
+    //初始化地理编码器
+    _geocoder = [[CLGeocoder alloc] init];
+}
 
-{
-    
-    //初始化BMKLocationService
-    
-    self.locService = [[BMKLocationService alloc]init];
-    
-     self.locService.delegate = self;
-    
-     self.locService.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
-    
-    //启动LocationService
-    
-    [ self.locService startUserLocationService];
-    
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations{
+  
+    NSLog(@"%lu",(unsigned long)locations.count);
+    [_locationManager stopUpdatingLocation];
+    CLLocation * location = locations.lastObject;
+    // 纬度
+    _latitude = location.coordinate.latitude;
+    // 经度
+    _longitude = location.coordinate.longitude;
+    if(self.zzParkHire.mapLng.length != 0 && self.zzParkHire.mapLat.length !=0)
+    {
+        [self gps2m:_latitude _y1:_longitude _x2:[self.zzParkHire.mapLat floatValue] _y2:[self.zzParkHire.mapLng floatValue]];
+    }
+   
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -55,26 +78,17 @@
    
     
 }
-- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
 
-{
-    
-    NSLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
-    self.locService.delegate = nil;
-    [self.locService stopUserLocationService];
-    
-   
-    
-}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.address =self.zzParkHire.address;
-    [self startLocation];
+    [self initializeLocationService];
     [self loadParkDetail];
     self.isModify = false;
     
     [self initMiniMap];
+    
     
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
     if(screenHeight > 667)
@@ -159,6 +173,11 @@
             self.hireTypeLabel.text = hireTypeLabel;
             self.miaosuTextView.text = self.zzParkHire.parkHireRemarks;
             self.timeLabel.text = [self updateTimeForRow:[self.zzParkHire.addTime doubleValue]];
+            
+            if(_latitude != 0 && _longitude !=0)
+            {
+                [self gps2m:_latitude _y1:_longitude _x2:[self.zzParkHire.mapLat floatValue] _y2:[self.zzParkHire.mapLng floatValue]];
+            }
             if([self.zzParkHire.subName isEqualToString:[DataManager getUserName]])
             {
 //                [self.deleteBtn setHidden:NO];
@@ -259,7 +278,7 @@
     s = s * 6378137.0;
     
     s = round(s * 10000) / 10000;
-    
+    self.distanceLabel.text = [NSString stringWithFormat:@"%.1f公里",s/1000];
     return s;
     
 }

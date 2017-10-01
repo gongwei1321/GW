@@ -1914,7 +1914,7 @@
 				TargetAttributes = {
 					F6978EE21C1BB52B00841B55 = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = 22LKJEN5J7;
+						DevelopmentTeam = R2HF62F5QK;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -2303,7 +2303,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Meixi Zhang (B937UGHM87)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 22LKJEN5J7;
+				DEVELOPMENT_TEAM = R2HF62F5QK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2344,7 +2344,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Meixi Zhang (TR8NK2AKK5)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 22LKJEN5J7;
+				DEVELOPMENT_TEAM = R2HF62F5QK;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

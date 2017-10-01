@@ -18,4 +18,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *rentTitleLabel;
 @property (weak, nonatomic) IBOutlet UIView *lineView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
 @end
