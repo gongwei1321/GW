@@ -81,7 +81,7 @@
         AddInterleavedViewController *vc = [[AddInterleavedViewController alloc] initWithNibName:@"AddInterleavedViewController" bundle:nil];
         [self.navigationController pushViewController:vc animated:YES];
     }]];
-    [alertController addAction:[UIAlertAction actionWithTitle:@"错时" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:@"分时" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         AddCSParkHireViewController *vc = [[AddCSParkHireViewController alloc] initWithNibName:@"AddCSParkHireViewController" bundle:nil];
         [self.navigationController pushViewController:vc animated:YES];
     }]];

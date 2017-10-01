@@ -82,8 +82,8 @@
         self.carPlaceTextFiled.text = self.zzParkHire.parkHireName;
         self.placePtTF.text =  [NSString stringWithFormat:@"%@, %@", self.zzParkHire.mapLng,self.zzParkHire.mapLat];
         self.rentMoneyTextFiled.text = self.zzParkHire.price;
-        
-        
+       [self.beginTimeField setTextColor:[UIColor blackColor]];
+       [self.endTimeField setTextColor:[UIColor blackColor]];
         self.beginTimeField.text = [self getDayTimeString:self.zzParkHire.beginTime];
         
         self.endTimeField.text = [self getDayTimeString:self.zzParkHire.endTime];

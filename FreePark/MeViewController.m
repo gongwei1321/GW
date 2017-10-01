@@ -21,6 +21,7 @@
 #import "AddInterleavedViewController.h"
 #import "LoginViewController.h"
 #import "AppDelegate.h"
+#import "ParkHireRequest.h"
 @interface MeViewController ()<UITableViewDelegate,UITableViewDataSource,UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -97,7 +98,14 @@
             
         }
     }];
-
+//    [ParkHireRequest requestMyParkHireByName:[DataManager getUserName] complete:^(BOOL issuccess, NSString *ret, NSArray *resultlist) {
+//        if(issuccess)
+//        {
+//            [self.hirecell.shuliangButton setTitle:<#(nullable NSString *)#> forState:<#(UIControlState)#>]
+//        }
+//           
+//        
+//    }];
     
     [UserRequests requestGetAllUserReview:[DataManager getUserName] andBeiJingMin:[DataManager beijingReviewCount]   andBeiJingMax: [NSString stringWithFormat:@"%d",[[DataManager beijingReviewCount] intValue] + 1000]
                            andShangHaiMin:[DataManager shanghaiReviewCount] andShangHaiMax: [NSString stringWithFormat:@"%d",[[DataManager shanghaiReviewCount] intValue] + 1000] andGuangZhouMin:[DataManager guangzhouReviewCount] andGuangZhouMax:[NSString stringWithFormat:@"%d",[[DataManager guangzhouReviewCount] intValue] + 1000] andShenZhenMin:[DataManager shenzhenReviewCount] andShenZhenMax: [NSString stringWithFormat:@"%d",[[DataManager shenzhenReviewCount] intValue] + 1000] complete:^(BOOL issuccess, NSString *ret,BOOL isUpdate,NSMutableArray *array) {

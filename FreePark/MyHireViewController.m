@@ -72,6 +72,9 @@
 {
     [super viewWillAppear:animated];
 //    self.navigationController.navigationBarHidden = NO;
+    self.navigationController.navigationBarHidden = NO;
+  
+   
     if(self.isModify)
     {
         [self loadMoreHire];
@@ -93,6 +96,8 @@
     cell.tag  = indexPath.row;
     ZZParkHire *model = (ZZParkHire *)self.hireArray[indexPath.row];
     cell.placeLabe.text = model.parkHireName;
+   
+    cell.timeLabel.text = [self updateTimeForRow: [model.addtime doubleValue]];
     if([model.status isEqualToString:@"0"])
     {
         cell.statusLabel.text = @"未审核";
@@ -114,7 +119,7 @@
     
     if([model.isEntireRent isEqualToString:@"0"])
     {
-        cell.hireTypeLabel.text = @"错时";
+        cell.hireTypeLabel.text = @"分时";
     }
     else if([model.isEntireRent isEqualToString:@"1"])
     {
@@ -141,6 +146,39 @@
     return 157;
 }
 
+- (NSString *)updateTimeForRow:(NSInteger)timestamp {
+    // 获取当前时时间戳 1466386762.345715 十位整数 6位小数
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    // 创建歌曲时间戳(后台返回的时间 一般是13位数字)
+//    NSTimeInterval createTime = timestamp/1000;
+    // 时间差
+    NSTimeInterval time = currentTime - timestamp;
+    
+    // 秒转小时
+    NSInteger hours = time/3600;
+    if(hours == 0)
+    {
+        NSInteger minutes = time/60;
+        return [NSString stringWithFormat:@"%ld分钟前",minutes];
+    }
+    if (hours<24) {
+        return [NSString stringWithFormat:@"%ld小时前",hours];
+    }
+    //秒转天数
+    NSInteger days = time/3600/24;
+    if (days < 30) {
+        return [NSString stringWithFormat:@"%ld天前",days];
+    }
+    //秒转月
+    NSInteger months = time/3600/24/30;
+    if (months < 12) {
+        return [NSString stringWithFormat:@"%ld月前",months];
+    }
+    //秒转年
+    NSInteger years = time/3600/24/30/12;
+    return [NSString stringWithFormat:@"%ld年前",years];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -152,11 +190,15 @@
     ParkHireDetailViewController *parkHireDetailVC = [[ParkHireDetailViewController alloc] initWithNibName:@"ParkHireDetailViewController" bundle:nil];
     parkHireDetailVC.zzParkHire = model;
     self.isModify = true;
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+         self.navigationController.navigationBarHidden = YES;
+//    });
     [self.navigationController pushViewController:parkHireDetailVC animated:YES];
 }
 - (void)modifiyHire:(NSInteger)index
 {
    ZZParkHire *model = (ZZParkHire *)self.hireArray[index];
+   self.navigationController.navigationBarHidden = YES;
    if([model.isEntireRent isEqualToString:@"0"])
    {
        AddCSParkHireViewController *addCSVC = [[AddCSParkHireViewController alloc] initWithNibName:@"AddCSParkHireViewController" bundle:nil];

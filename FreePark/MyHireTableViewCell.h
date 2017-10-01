@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *hireTypeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *beizhuLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
 @property (assign, nonatomic) id<MyHireTableViewCellelegate> delegate;
 @end

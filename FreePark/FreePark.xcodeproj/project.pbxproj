@@ -157,6 +157,7 @@
 		9BF308AC1CEDF862005171BB /* FPUserAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF308A61CEDF862005171BB /* FPUserAdd.m */; };
 		9BF308AD1CEDF862005171BB /* FPUserReview+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF308A81CEDF862005171BB /* FPUserReview+CoreDataProperties.m */; };
 		9BF308AE1CEDF862005171BB /* FPUserReview.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BF308AA1CEDF862005171BB /* FPUserReview.m */; };
+		C3C221281F81169E0023D883 /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3C221271F81169E0023D883 /* ContactViewController.m */; };
 		F60BFEA71C30192B004003CE /* ParkSearchEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = F60BFEA61C30192B004003CE /* ParkSearchEntity.m */; };
 		F61580C11F6584F300922718 /* ParkJieJingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F61580C01F6584F300922718 /* ParkJieJingVC.m */; };
 		F61580C21F65855300922718 /* BaiduPanoSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F61580B21F65827100922718 /* BaiduPanoSDK.framework */; };
@@ -568,6 +569,8 @@
 		9BF308A81CEDF862005171BB /* FPUserReview+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FPUserReview+CoreDataProperties.m"; sourceTree = "<group>"; };
 		9BF308A91CEDF862005171BB /* FPUserReview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPUserReview.h; sourceTree = "<group>"; };
 		9BF308AA1CEDF862005171BB /* FPUserReview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPUserReview.m; sourceTree = "<group>"; };
+		C3C221261F81169E0023D883 /* ContactViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
+		C3C221271F81169E0023D883 /* ContactViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
 		F60BFEA51C30192B004003CE /* ParkSearchEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkSearchEntity.h; sourceTree = "<group>"; };
 		F60BFEA61C30192B004003CE /* ParkSearchEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkSearchEntity.m; sourceTree = "<group>"; };
 		F61580B21F65827100922718 /* BaiduPanoSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BaiduPanoSDK.framework; sourceTree = "<group>"; };
@@ -1860,6 +1863,8 @@
 				F6ECD32B1F52FFA900D7B219 /* ParkHireAnnoView.h */,
 				F6ECD32C1F52FFA900D7B219 /* ParkHireAnnoView.m */,
 				F6ECD32E1F52FFBC00D7B219 /* ParkHireAnnoView.xib */,
+				C3C221261F81169E0023D883 /* ContactViewController.h */,
+				C3C221271F81169E0023D883 /* ContactViewController.m */,
 			);
 			name = ParkForRent;
 			sourceTree = "<group>";
@@ -2170,6 +2175,7 @@
 				F6800D421C3584DC00D0E839 /* UIView+MJExtension.m in Sources */,
 				F693F72B1CDF47C300F31F64 /* PhoneNumBlindVC.m in Sources */,
 				F60BFEA71C30192B004003CE /* ParkSearchEntity.m in Sources */,
+				C3C221281F81169E0023D883 /* ContactViewController.m in Sources */,
 				F61580C11F6584F300922718 /* ParkJieJingVC.m in Sources */,
 				9BE6C2A61C3A87A40066658E /* ShareViewController.m in Sources */,
 				9B6839AF1C2ADE8C0093CC90 /* SVProgressHUD.m in Sources */,

@@ -10,15 +10,12 @@
 #import "ZZParkHire.h"
 @interface ParkHireDetailViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UILabel *placeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *publicTimeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *contactLabel;
 @property (weak, nonatomic) IBOutlet UILabel *hireTypeLabel;
 @property (weak, nonatomic) IBOutlet UITextView *miaosuTextView;
-@property (weak, nonatomic) IBOutlet UILabel *beginTimeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *endTime;
 @property(nonatomic,strong) ZZParkHire *zzParkHire;
-@property (weak, nonatomic) IBOutlet UILabel *beginTime;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *miaosuTopConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *miaosuTextViewConstraint;
+@property (weak, nonatomic) IBOutlet UILabel *rentTitleLabel;
+@property (weak, nonatomic) IBOutlet UIView *lineView;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @end
