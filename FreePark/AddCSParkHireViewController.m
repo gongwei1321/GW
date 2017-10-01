@@ -74,7 +74,7 @@
     self.rentMoneyTextFiled.inputAccessoryView = topView;
     self.miaosuTextView.inputAccessoryView = topView;
     
-    
+    [self.miaosuTextView.layer setCornerRadius:6];
     self.rentMoneyTextFiled.keyboardType = UIKeyboardTypeDecimalPad;
     if(self.zzParkHire.parkhireId.length!=0)//这次是修改
     {
@@ -124,8 +124,8 @@
         [formatter setTimeStyle:NSDateFormatterShortStyle];
         
         [formatter setDateFormat:@"HH"];
-        self.beginTimeField.text = @"08:00";
-        self.endTimeField.text = @"18:00";
+//        self.beginTimeField.text = @"08:00";
+//        self.endTimeField.text = @"18:00";
     }
 }
 - (void)dealKeyboardHide {
@@ -276,6 +276,7 @@
             [blockSelf.addCSMaskView setHidden:YES];
             
             blockSelf.beginTimeField.text = [NSString stringWithFormat:@"%@",time];
+            [blockSelf.beginTimeField setTextColor:[UIColor blackColor]];
         }
     };
     
@@ -314,6 +315,7 @@
             [blockSelf.addCSMaskView setHidden:YES];
             
             blockSelf.endTimeField.text = [NSString stringWithFormat:@"%@",time];
+            [blockSelf.endTimeField setTextColor:[UIColor blackColor]];
         }
     };
     

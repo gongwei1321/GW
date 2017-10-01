@@ -96,17 +96,17 @@
     if([model.status isEqualToString:@"0"])
     {
         cell.statusLabel.text = @"未审核";
-        [cell.textLabel setTextColor:[UIColor yellowColor]];
+//        [cell.textLabel setTextColor:[UIColor yellowColor]];
     }
     else  if([model.status isEqualToString:@"1"])
     {
         cell.statusLabel.text = @"已审核";
-        [cell.textLabel setTextColor:[UIColor greenColor]];
+//        [cell.textLabel setTextColor:[UIColor greenColor]];
     }
     else  if([model.status isEqualToString:@"2"])
     {
         cell.statusLabel.text = @"审核未通过";
-        [cell.textLabel setTextColor:[UIColor redColor]];
+//        [cell.textLabel setTextColor:[UIColor redColor]];
         
     }
     
@@ -138,7 +138,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    return 300;
+    return 157;
 }
 
 - (void)viewWillDisappear:(BOOL)animated

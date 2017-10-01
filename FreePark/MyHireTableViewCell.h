@@ -17,7 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *placeLabe;
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 @property (weak, nonatomic) IBOutlet UILabel *hireTypeLabel;
-@property (weak, nonatomic) IBOutlet UITextView *beizhuLabel;
+@property (weak, nonatomic) IBOutlet UILabel *beizhuLabel;
 
 @property (assign, nonatomic) id<MyHireTableViewCellelegate> delegate;
 @end

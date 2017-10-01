@@ -49,6 +49,7 @@
     self.carPlaceTextFiled.inputAccessoryView = topView;
     self.rentMoneyTextFiled.inputAccessoryView = topView;
     self.miaosuTextView.inputAccessoryView = topView;
+    [self.miaosuTextView.layer setCornerRadius:6];
 
     self.rentMoneyTextFiled.keyboardType = UIKeyboardTypeDecimalPad;
     
