@@ -75,7 +75,7 @@
     self.miaosuTextView.inputAccessoryView = topView;
     
     
-    
+    self.rentMoneyTextFiled.keyboardType = UIKeyboardTypeDecimalPad;
     if(self.zzParkHire.parkhireId.length!=0)//这次是修改
     {
         self.contactTextFiled.text = self.zzParkHire.contact;

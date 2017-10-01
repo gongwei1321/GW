@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -31,8 +31,17 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdD-Zk-A62" customClass="ShadowTopView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="发布车位" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPJ-5c-Itp">
+                            <rect key="frame" x="125" y="33.5" width="70" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="UPJ-5c-Itp" firstAttribute="centerX" secondItem="gdD-Zk-A62" secondAttribute="centerX" id="P7A-Qe-g99"/>
                         <constraint firstAttribute="height" constant="64" id="pPX-sC-37p"/>
                     </constraints>
                 </view>
@@ -200,13 +209,13 @@
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FaF-m8-jbx">
-                    <rect key="frame" x="144.5" y="508" width="31" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FaF-m8-jbx">
+                    <rect key="frame" x="2.5" y="502" width="316" height="66"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="31" id="9DP-Tf-A1q"/>
-                        <constraint firstAttribute="height" constant="30" id="lYV-xY-u7T"/>
+                        <constraint firstAttribute="width" constant="316" id="9DP-Tf-A1q"/>
+                        <constraint firstAttribute="height" constant="66" id="lYV-xY-u7T"/>
                     </constraints>
-                    <state key="normal" title="发布"/>
+                    <state key="normal" image="发-布"/>
                     <connections>
                         <action selector="okClick:" destination="-1" eventType="touchUpInside" id="6c7-1J-H3Y"/>
                     </connections>
@@ -251,6 +260,7 @@
                 <constraint firstItem="Ut8-HG-LCT" firstAttribute="top" secondItem="xpZ-nk-yXg" secondAttribute="bottom" constant="2" id="LX0-Ya-8rF"/>
                 <constraint firstItem="KeZ-qy-9r0" firstAttribute="top" secondItem="MQa-zd-qOv" secondAttribute="bottom" constant="2" id="NQE-Ch-sJD"/>
                 <constraint firstItem="Mtu-aj-Tkv" firstAttribute="top" secondItem="WqC-9A-MLm" secondAttribute="bottom" constant="8" id="Npo-ja-H7Z"/>
+                <constraint firstItem="UPJ-5c-Itp" firstAttribute="centerY" secondItem="IBG-NV-5cV" secondAttribute="centerY" id="O2H-9D-065"/>
                 <constraint firstItem="WqC-9A-MLm" firstAttribute="top" secondItem="Hgt-YK-mtX" secondAttribute="bottom" constant="2" id="Oj2-sk-rOY"/>
                 <constraint firstItem="g1v-Vh-Jq6" firstAttribute="leading" secondItem="R2W-N6-WKg" secondAttribute="trailing" constant="30" id="Ppw-He-OcM"/>
                 <constraint firstItem="Ut8-HG-LCT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="TPP-wn-t0S"/>
@@ -269,7 +279,7 @@
                 <constraint firstItem="gnR-zd-r6t" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="mrE-tm-QEs"/>
                 <constraint firstAttribute="trailing" secondItem="WqC-9A-MLm" secondAttribute="trailing" constant="8" id="oyC-Gb-dc7"/>
                 <constraint firstItem="R2W-N6-WKg" firstAttribute="leading" secondItem="4A3-Pd-26I" secondAttribute="trailing" constant="28" id="q9G-HY-cwy"/>
-                <constraint firstItem="FaF-m8-jbx" firstAttribute="top" secondItem="7fk-Gv-nhu" secondAttribute="bottom" constant="16" id="qbf-rY-VGP"/>
+                <constraint firstItem="FaF-m8-jbx" firstAttribute="top" secondItem="7fk-Gv-nhu" secondAttribute="bottom" constant="10" id="qbf-rY-VGP"/>
                 <constraint firstItem="gnR-zd-r6t" firstAttribute="top" secondItem="MQa-zd-qOv" secondAttribute="bottom" constant="2" id="rTG-jO-GIt"/>
                 <constraint firstAttribute="trailing" secondItem="cb4-sj-jB7" secondAttribute="trailing" constant="16" id="spS-H3-zZl"/>
                 <constraint firstItem="4A3-Pd-26I" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="tS6-uV-Dm7"/>
@@ -287,5 +297,6 @@
         <image name="radioBtn" width="15" height="15"/>
         <image name="radioBtn_s" width="15" height="15"/>
         <image name="vcback" width="11" height="20"/>
+        <image name="发-布" width="316" height="66"/>
     </resources>
 </document>

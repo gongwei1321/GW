@@ -65,6 +65,7 @@
     self.detailTextView.inputAccessoryView = topView;
     self.shareTextView.inputAccessoryView = topView;
     self.emailTextField.inputAccessoryView = topView;
+    self.priceTextField.keyboardType = UIKeyboardTypeDecimalPad;
 }
 
 - (void)viewWillAppear:(BOOL)animated

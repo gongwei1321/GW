@@ -189,7 +189,7 @@
         self.dianpingcell = cell;
     }
     if (indexPath.row == 3) {
-        cell.cellImageView.image = [UIImage imageNamed:@"我的出租"];
+        cell.cellImageView.image = [UIImage imageNamed:@"停车-1-拷贝-5"];
         cell.titleLabel.text = @"我的出租";
         self.hirecell = cell;
     }
@@ -213,7 +213,7 @@
         cell.titleLabel.text = @"关于我们";
     }
     if (indexPath.row == 7) {
-        cell.cellImageView.image = [UIImage imageNamed:@"认证图标"];
+        cell.cellImageView.image = [UIImage imageNamed:@"退出登录"];
         cell.titleLabel.text = @"退出登录";
     }
     return cell;
